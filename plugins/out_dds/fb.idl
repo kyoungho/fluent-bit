@@ -1,0 +1,14 @@
+const long MAX_RECORDS = 128;
+
+struct Record {
+    string key;
+    double value;
+};
+
+struct FBType {
+    long long ts;
+    string tag;//@key
+    sequence<Record, MAX_RECORDS> records;
+};
+
+
