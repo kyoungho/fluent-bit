@@ -2,10 +2,12 @@
 #include <fluent-bit/flb_output.h>
 #include <fluent-bit/flb_time.h>
 #include <fluent-bit/flb_pack.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include "ndds/ndds_c.h"
+#include "fb.h"
+#include "fbSupport.h"
 #include "dds.h"
-
-//#include "ndds/ndds_c.h"
 
 static int cb_dds_init(struct flb_output_instance *ins,
 		struct flb_config *config,
