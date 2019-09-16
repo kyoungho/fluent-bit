@@ -9,8 +9,8 @@ For more information, type 'rtiddsgen -help' at a command shell
 or consult the RTI Connext manual.
 */
 
-#ifndef fbPlugin_1282814526_h
-#define fbPlugin_1282814526_h
+#ifndef fbPlugin_1282814522_h
+#define fbPlugin_1282814522_h
 
 #include "fb.h"
 
@@ -202,88 +202,88 @@ RecordPlugin_delete(struct PRESTypePlugin *);
 /* The type used to store keys for instances of type struct
 * AnotherSimple.
 *
-* By default, this type is struct FBType
+* By default, this type is struct FB
 * itself. However, if for some reason this choice is not practical for your
-* system (e.g. if sizeof(struct FBType)
+* system (e.g. if sizeof(struct FB)
 * is very large), you may redefine this typedef in terms of another type of
 * your choosing. HOWEVER, if you define the KeyHolder type to be something
 * other than struct AnotherSimple, the
 * following restriction applies: the key of struct
-* FBType must consist of a
+* FB must consist of a
 * single field of your redefined KeyHolder type and that field must be the
-* first field in struct FBType.
+* first field in struct FB.
 */
-typedef  struct FBType FBTypeKeyHolder;
+typedef  struct FB FBKeyHolder;
 
-#define FBTypePlugin_get_sample PRESTypePluginDefaultEndpointData_getSample 
+#define FBPlugin_get_sample PRESTypePluginDefaultEndpointData_getSample 
 
-#define FBTypePlugin_get_buffer PRESTypePluginDefaultEndpointData_getBuffer 
-#define FBTypePlugin_return_buffer PRESTypePluginDefaultEndpointData_returnBuffer
+#define FBPlugin_get_buffer PRESTypePluginDefaultEndpointData_getBuffer 
+#define FBPlugin_return_buffer PRESTypePluginDefaultEndpointData_returnBuffer
 
-#define FBTypePlugin_get_key PRESTypePluginDefaultEndpointData_getKey 
-#define FBTypePlugin_return_key PRESTypePluginDefaultEndpointData_returnKey
+#define FBPlugin_get_key PRESTypePluginDefaultEndpointData_getKey 
+#define FBPlugin_return_key PRESTypePluginDefaultEndpointData_returnKey
 
-#define FBTypePlugin_create_sample PRESTypePluginDefaultEndpointData_createSample 
-#define FBTypePlugin_destroy_sample PRESTypePluginDefaultEndpointData_deleteSample 
+#define FBPlugin_create_sample PRESTypePluginDefaultEndpointData_createSample 
+#define FBPlugin_destroy_sample PRESTypePluginDefaultEndpointData_deleteSample 
 
 /* --------------------------------------------------------------------------------------
 Support functions:
 * -------------------------------------------------------------------------------------- */
 
-NDDSUSERDllExport extern FBType*
-FBTypePluginSupport_create_data_w_params(
+NDDSUSERDllExport extern FB*
+FBPluginSupport_create_data_w_params(
     const struct DDS_TypeAllocationParams_t * alloc_params);
 
-NDDSUSERDllExport extern FBType*
-FBTypePluginSupport_create_data_ex(RTIBool allocate_pointers);
+NDDSUSERDllExport extern FB*
+FBPluginSupport_create_data_ex(RTIBool allocate_pointers);
 
-NDDSUSERDllExport extern FBType*
-FBTypePluginSupport_create_data(void);
+NDDSUSERDllExport extern FB*
+FBPluginSupport_create_data(void);
 
 NDDSUSERDllExport extern RTIBool 
-FBTypePluginSupport_copy_data(
-    FBType *out,
-    const FBType *in);
+FBPluginSupport_copy_data(
+    FB *out,
+    const FB *in);
 
 NDDSUSERDllExport extern void 
-FBTypePluginSupport_destroy_data_w_params(
-    FBType *sample,
+FBPluginSupport_destroy_data_w_params(
+    FB *sample,
     const struct DDS_TypeDeallocationParams_t * dealloc_params);
 
 NDDSUSERDllExport extern void 
-FBTypePluginSupport_destroy_data_ex(
-    FBType *sample,RTIBool deallocate_pointers);
+FBPluginSupport_destroy_data_ex(
+    FB *sample,RTIBool deallocate_pointers);
 
 NDDSUSERDllExport extern void 
-FBTypePluginSupport_destroy_data(
-    FBType *sample);
+FBPluginSupport_destroy_data(
+    FB *sample);
 
 NDDSUSERDllExport extern void 
-FBTypePluginSupport_print_data(
-    const FBType *sample,
+FBPluginSupport_print_data(
+    const FB *sample,
     const char *desc,
     unsigned int indent);
 
-NDDSUSERDllExport extern FBType*
-FBTypePluginSupport_create_key_ex(RTIBool allocate_pointers);
+NDDSUSERDllExport extern FB*
+FBPluginSupport_create_key_ex(RTIBool allocate_pointers);
 
-NDDSUSERDllExport extern FBType*
-FBTypePluginSupport_create_key(void);
-
-NDDSUSERDllExport extern void 
-FBTypePluginSupport_destroy_key_ex(
-    FBTypeKeyHolder *key,RTIBool deallocate_pointers);
+NDDSUSERDllExport extern FB*
+FBPluginSupport_create_key(void);
 
 NDDSUSERDllExport extern void 
-FBTypePluginSupport_destroy_key(
-    FBTypeKeyHolder *key);
+FBPluginSupport_destroy_key_ex(
+    FBKeyHolder *key,RTIBool deallocate_pointers);
+
+NDDSUSERDllExport extern void 
+FBPluginSupport_destroy_key(
+    FBKeyHolder *key);
 
 /* ----------------------------------------------------------------------------
 Callback functions:
 * ---------------------------------------------------------------------------- */
 
 NDDSUSERDllExport extern PRESTypePluginParticipantData 
-FBTypePlugin_on_participant_attached(
+FBPlugin_on_participant_attached(
     void *registration_data, 
     const struct PRESTypePluginParticipantInfo *participant_info,
     RTIBool top_level_registration, 
@@ -291,53 +291,53 @@ FBTypePlugin_on_participant_attached(
     RTICdrTypeCode *typeCode);
 
 NDDSUSERDllExport extern void 
-FBTypePlugin_on_participant_detached(
+FBPlugin_on_participant_detached(
     PRESTypePluginParticipantData participant_data);
 
 NDDSUSERDllExport extern PRESTypePluginEndpointData 
-FBTypePlugin_on_endpoint_attached(
+FBPlugin_on_endpoint_attached(
     PRESTypePluginParticipantData participant_data,
     const struct PRESTypePluginEndpointInfo *endpoint_info,
     RTIBool top_level_registration, 
     void *container_plugin_context);
 
 NDDSUSERDllExport extern void 
-FBTypePlugin_on_endpoint_detached(
+FBPlugin_on_endpoint_detached(
     PRESTypePluginEndpointData endpoint_data);
 
 NDDSUSERDllExport extern void    
-FBTypePlugin_return_sample(
+FBPlugin_return_sample(
     PRESTypePluginEndpointData endpoint_data,
-    FBType *sample,
+    FB *sample,
     void *handle);    
 
 NDDSUSERDllExport extern RTIBool 
-FBTypePlugin_copy_sample(
+FBPlugin_copy_sample(
     PRESTypePluginEndpointData endpoint_data,
-    FBType *out,
-    const FBType *in);
+    FB *out,
+    const FB *in);
 
 /* ----------------------------------------------------------------------------
 (De)Serialize functions:
 * ------------------------------------------------------------------------- */
 
 NDDSUSERDllExport extern RTIBool
-FBTypePlugin_serialize_to_cdr_buffer(
+FBPlugin_serialize_to_cdr_buffer(
     char * buffer,
     unsigned int * length,
-    const FBType *sample); 
+    const FB *sample); 
 
 NDDSUSERDllExport extern RTIBool
-FBTypePlugin_serialize_to_cdr_buffer_ex(
+FBPlugin_serialize_to_cdr_buffer_ex(
     char *buffer,
     unsigned int *length,
-    const FBType *sample,
+    const FB *sample,
     DDS_DataRepresentationId_t representation);
 
 NDDSUSERDllExport extern RTIBool 
-FBTypePlugin_deserialize(
+FBPlugin_deserialize(
     PRESTypePluginEndpointData endpoint_data,
-    FBType **sample, 
+    FB **sample, 
     RTIBool * drop_sample,
     struct RTICdrStream *stream,
     RTIBool deserialize_encapsulation,
@@ -345,21 +345,21 @@ FBTypePlugin_deserialize(
     void *endpoint_plugin_qos);
 
 NDDSUSERDllExport extern RTIBool
-FBTypePlugin_deserialize_from_cdr_buffer(
-    FBType *sample,
+FBPlugin_deserialize_from_cdr_buffer(
+    FB *sample,
     const char * buffer,
     unsigned int length);    
 #ifndef NDDS_STANDALONE_TYPE
 NDDSUSERDllExport extern DDS_ReturnCode_t
-FBTypePlugin_data_to_string(
-    const FBType *sample,
+FBPlugin_data_to_string(
+    const FB *sample,
     char *str,
     DDS_UnsignedLong *str_size, 
     const struct DDS_PrintFormatProperty *property);    
 #endif
 
 NDDSUSERDllExport extern unsigned int 
-FBTypePlugin_get_serialized_sample_max_size(
+FBPlugin_get_serialized_sample_max_size(
     PRESTypePluginEndpointData endpoint_data,
     RTIBool include_encapsulation,
     RTIEncapsulationId encapsulation_id,
@@ -369,25 +369,25 @@ FBTypePlugin_get_serialized_sample_max_size(
 Key Management functions:
 * -------------------------------------------------------------------------------------- */
 NDDSUSERDllExport extern PRESTypePluginKeyKind 
-FBTypePlugin_get_key_kind(void);
+FBPlugin_get_key_kind(void);
 
 NDDSUSERDllExport extern unsigned int 
-FBTypePlugin_get_serialized_key_max_size(
+FBPlugin_get_serialized_key_max_size(
     PRESTypePluginEndpointData endpoint_data,
     RTIBool include_encapsulation,
     RTIEncapsulationId encapsulation_id,
     unsigned int current_alignment);
 
 NDDSUSERDllExport extern unsigned int 
-FBTypePlugin_get_serialized_key_max_size_for_keyhash(
+FBPlugin_get_serialized_key_max_size_for_keyhash(
     PRESTypePluginEndpointData endpoint_data,
     RTIEncapsulationId encapsulation_id,
     unsigned int current_alignment);
 
 NDDSUSERDllExport extern RTIBool 
-FBTypePlugin_deserialize_key(
+FBPlugin_deserialize_key(
     PRESTypePluginEndpointData endpoint_data,
-    FBType ** sample,
+    FB ** sample,
     RTIBool * drop_sample,
     struct RTICdrStream *stream,
     RTIBool deserialize_encapsulation,
@@ -395,26 +395,26 @@ FBTypePlugin_deserialize_key(
     void *endpoint_plugin_qos);
 
 NDDSUSERDllExport extern RTIBool 
-FBTypePlugin_instance_to_key(
+FBPlugin_instance_to_key(
     PRESTypePluginEndpointData endpoint_data,
-    FBTypeKeyHolder *key, 
-    const FBType *instance);
+    FBKeyHolder *key, 
+    const FB *instance);
 
 NDDSUSERDllExport extern RTIBool 
-FBTypePlugin_key_to_instance(
+FBPlugin_key_to_instance(
     PRESTypePluginEndpointData endpoint_data,
-    FBType *instance, 
-    const FBTypeKeyHolder *key);
+    FB *instance, 
+    const FBKeyHolder *key);
 
 NDDSUSERDllExport extern RTIBool 
-FBTypePlugin_instance_to_keyhash(
+FBPlugin_instance_to_keyhash(
     PRESTypePluginEndpointData endpoint_data,
     DDS_KeyHash_t *keyhash,
-    const FBType *instance,
+    const FB *instance,
     RTIEncapsulationId encapsulationId);
 
 NDDSUSERDllExport extern RTIBool 
-FBTypePlugin_serialized_sample_to_keyhash(
+FBPlugin_serialized_sample_to_keyhash(
     PRESTypePluginEndpointData endpoint_data,
     struct RTICdrStream *stream, 
     DDS_KeyHash_t *keyhash,
@@ -422,14 +422,14 @@ FBTypePlugin_serialized_sample_to_keyhash(
     void *endpoint_plugin_qos); 
 
 NDDSUSERDllExport extern
-struct RTIXCdrInterpreterPrograms *FBTypePlugin_get_programs();
+struct RTIXCdrInterpreterPrograms *FBPlugin_get_programs();
 
 /* Plugin Functions */
 NDDSUSERDllExport extern struct PRESTypePlugin*
-FBTypePlugin_new(void);
+FBPlugin_new(void);
 
 NDDSUSERDllExport extern void
-FBTypePlugin_delete(struct PRESTypePlugin *);
+FBPlugin_delete(struct PRESTypePlugin *);
 
 #if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
 /* If the code is building on Windows, stop exporting symbols.
@@ -438,5 +438,5 @@ FBTypePlugin_delete(struct PRESTypePlugin *);
 #define NDDSUSERDllExport
 #endif
 
-#endif /* fbPlugin_1282814526_h */
+#endif /* fbPlugin_1282814522_h */
 

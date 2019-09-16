@@ -83,6 +83,9 @@ include_directories(${Connext_INCLUDE_DIRS})
 add_definitions(${Connext_DEFINITIONS})
 
 set(src
-  dds.c)
+  dds.c
+  fb.c
+  fbPlugin.c
+  fbSupport.c)
 
 FLB_PLUGIN(out_dds "${src}" "${Connext_LIBRARIES}")

@@ -5,7 +5,7 @@ struct Record {
     double value;
 };
 
-struct FBType {
+struct FB {
     long long ts;
     string tag;//@key
     sequence<Record, MAX_RECORDS> records;

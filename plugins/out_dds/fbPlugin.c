@@ -780,43 +780,43 @@ RecordPlugin_delete(struct PRESTypePlugin *plugin)
 } 
 
 /* ----------------------------------------------------------------------------
-*  Type FBType
+*  Type FB
 * -------------------------------------------------------------------------- */
 
 /* -----------------------------------------------------------------------------
 Support functions:
 * -------------------------------------------------------------------------- */
 
-FBType*
-FBTypePluginSupport_create_data_w_params(
+FB*
+FBPluginSupport_create_data_w_params(
     const struct DDS_TypeAllocationParams_t * alloc_params) 
 {
-    FBType *sample = NULL;
+    FB *sample = NULL;
 
-    RTIOsapiHeap_allocateStructure(&(sample),FBType);
+    RTIOsapiHeap_allocateStructure(&(sample),FB);
     if (sample == NULL) {
         return NULL;
     }
 
-    if (!FBType_initialize_w_params(sample,alloc_params)) {
+    if (!FB_initialize_w_params(sample,alloc_params)) {
         RTIOsapiHeap_freeStructure(sample);
         sample=NULL;
     }
     return sample;
 } 
 
-FBType *
-FBTypePluginSupport_create_data_ex(RTIBool allocate_pointers) 
+FB *
+FBPluginSupport_create_data_ex(RTIBool allocate_pointers) 
 {
-    FBType *sample = NULL;
+    FB *sample = NULL;
 
-    RTIOsapiHeap_allocateStructure(&(sample),FBType);
+    RTIOsapiHeap_allocateStructure(&(sample),FB);
 
     if(sample == NULL) {
         return NULL;
     }
 
-    if (!FBType_initialize_ex(sample,allocate_pointers, RTI_TRUE)) {
+    if (!FB_initialize_ex(sample,allocate_pointers, RTI_TRUE)) {
         RTIOsapiHeap_freeStructure(sample);
         sample=NULL;
     }
@@ -824,50 +824,50 @@ FBTypePluginSupport_create_data_ex(RTIBool allocate_pointers)
     return sample;
 }
 
-FBType *
-FBTypePluginSupport_create_data(void)
+FB *
+FBPluginSupport_create_data(void)
 {
-    return FBTypePluginSupport_create_data_ex(RTI_TRUE);
+    return FBPluginSupport_create_data_ex(RTI_TRUE);
 }
 
 void 
-FBTypePluginSupport_destroy_data_w_params(
-    FBType *sample,
+FBPluginSupport_destroy_data_w_params(
+    FB *sample,
     const struct DDS_TypeDeallocationParams_t * dealloc_params) {
-    FBType_finalize_w_params(sample,dealloc_params);
+    FB_finalize_w_params(sample,dealloc_params);
 
     RTIOsapiHeap_freeStructure(sample);
     sample=NULL;
 }
 
 void 
-FBTypePluginSupport_destroy_data_ex(
-    FBType *sample,RTIBool deallocate_pointers) {
-    FBType_finalize_ex(sample,deallocate_pointers);
+FBPluginSupport_destroy_data_ex(
+    FB *sample,RTIBool deallocate_pointers) {
+    FB_finalize_ex(sample,deallocate_pointers);
 
     RTIOsapiHeap_freeStructure(sample);
     sample=NULL;
 }
 
 void 
-FBTypePluginSupport_destroy_data(
-    FBType *sample) {
+FBPluginSupport_destroy_data(
+    FB *sample) {
 
-    FBTypePluginSupport_destroy_data_ex(sample,RTI_TRUE);
+    FBPluginSupport_destroy_data_ex(sample,RTI_TRUE);
 
 }
 
 RTIBool 
-FBTypePluginSupport_copy_data(
-    FBType *dst,
-    const FBType *src)
+FBPluginSupport_copy_data(
+    FB *dst,
+    const FB *src)
 {
-    return FBType_copy(dst,(const FBType*) src);
+    return FB_copy(dst,(const FB*) src);
 }
 
 void 
-FBTypePluginSupport_print_data(
-    const FBType *sample,
+FBPluginSupport_print_data(
+    const FB *sample,
     const char *desc,
     unsigned int indent_level)
 {
@@ -913,38 +913,38 @@ FBTypePluginSupport_print_data(
 
 }
 
-FBType *
-FBTypePluginSupport_create_key_ex(RTIBool allocate_pointers){
-    FBType *key = NULL;
+FB *
+FBPluginSupport_create_key_ex(RTIBool allocate_pointers){
+    FB *key = NULL;
 
-    RTIOsapiHeap_allocateStructure(&(key),FBTypeKeyHolder);
+    RTIOsapiHeap_allocateStructure(&(key),FBKeyHolder);
 
-    FBType_initialize_ex(key,allocate_pointers, RTI_TRUE);
+    FB_initialize_ex(key,allocate_pointers, RTI_TRUE);
 
     return key;
 }
 
-FBType *
-FBTypePluginSupport_create_key(void)
+FB *
+FBPluginSupport_create_key(void)
 {
-    return  FBTypePluginSupport_create_key_ex(RTI_TRUE);
+    return  FBPluginSupport_create_key_ex(RTI_TRUE);
 }
 
 void 
-FBTypePluginSupport_destroy_key_ex(
-    FBTypeKeyHolder *key,RTIBool deallocate_pointers)
+FBPluginSupport_destroy_key_ex(
+    FBKeyHolder *key,RTIBool deallocate_pointers)
 {
-    FBType_finalize_ex(key,deallocate_pointers);
+    FB_finalize_ex(key,deallocate_pointers);
 
     RTIOsapiHeap_freeStructure(key);
     key=NULL;
 }
 
 void 
-FBTypePluginSupport_destroy_key(
-    FBTypeKeyHolder *key) {
+FBPluginSupport_destroy_key(
+    FBKeyHolder *key) {
 
-    FBTypePluginSupport_destroy_key_ex(key,RTI_TRUE);
+    FBPluginSupport_destroy_key_ex(key,RTI_TRUE);
 
 }
 
@@ -953,7 +953,7 @@ Callback functions:
 * ---------------------------------------------------------------------------- */
 
 PRESTypePluginParticipantData 
-FBTypePlugin_on_participant_attached(
+FBPlugin_on_participant_attached(
     void *registration_data,
     const struct PRESTypePluginParticipantInfo *participant_info,
     RTIBool top_level_registration,
@@ -982,7 +982,7 @@ FBTypePlugin_on_participant_attached(
 
     programs = DDS_TypeCodeFactory_assert_programs_in_global_list(
         DDS_TypeCodeFactory_get_instance(),
-        FBType_get_typecode(),
+        FB_get_typecode(),
         &programProperty,
         RTI_XCDR_PROGRAM_MASK_TYPEPLUGIN);
     if (programs == NULL) {
@@ -996,7 +996,7 @@ FBTypePlugin_on_participant_attached(
 }
 
 void 
-FBTypePlugin_on_participant_detached(
+FBPlugin_on_participant_detached(
     PRESTypePluginParticipantData participant_data)
 {  		
     if (participant_data != NULL) {
@@ -1014,7 +1014,7 @@ FBTypePlugin_on_participant_detached(
 }
 
 PRESTypePluginEndpointData
-FBTypePlugin_on_endpoint_attached(
+FBPlugin_on_endpoint_attached(
     PRESTypePluginParticipantData participant_data,
     const struct PRESTypePluginEndpointInfo *endpoint_info,
     RTIBool top_level_registration, 
@@ -1037,20 +1037,20 @@ FBTypePlugin_on_endpoint_attached(
         participant_data,
         endpoint_info,
         (PRESTypePluginDefaultEndpointDataCreateSampleFunction)
-        FBTypePluginSupport_create_data,
+        FBPluginSupport_create_data,
         (PRESTypePluginDefaultEndpointDataDestroySampleFunction)
-        FBTypePluginSupport_destroy_data,
+        FBPluginSupport_destroy_data,
         (PRESTypePluginDefaultEndpointDataCreateKeyFunction)
-        FBTypePluginSupport_create_key ,            (PRESTypePluginDefaultEndpointDataDestroyKeyFunction)
-        FBTypePluginSupport_destroy_key);
+        FBPluginSupport_create_key ,            (PRESTypePluginDefaultEndpointDataDestroyKeyFunction)
+        FBPluginSupport_destroy_key);
 
     if (epd == NULL) {
         return NULL;
     } 
 
-    serializedKeyMaxSize =  FBTypePlugin_get_serialized_key_max_size(
+    serializedKeyMaxSize =  FBPlugin_get_serialized_key_max_size(
         epd,RTI_FALSE,RTI_CDR_ENCAPSULATION_ID_CDR_BE,0);
-    serializedKeyMaxSizeV2 =  FBTypePlugin_get_serialized_key_max_size_for_keyhash(
+    serializedKeyMaxSizeV2 =  FBPlugin_get_serialized_key_max_size_for_keyhash(
         epd,
         RTI_CDR_ENCAPSULATION_ID_CDR2_BE,
         0);
@@ -1066,7 +1066,7 @@ FBTypePlugin_on_endpoint_attached(
     }
 
     if (endpoint_info->endpointKind == PRES_TYPEPLUGIN_ENDPOINT_WRITER) {
-        serializedSampleMaxSize = FBTypePlugin_get_serialized_sample_max_size(
+        serializedSampleMaxSize = FBPlugin_get_serialized_sample_max_size(
             epd,RTI_FALSE,RTI_CDR_ENCAPSULATION_ID_CDR_BE,0);
         PRESTypePluginDefaultEndpointData_setMaxSizeSerializedSample(epd, serializedSampleMaxSize);
 
@@ -1074,7 +1074,7 @@ FBTypePlugin_on_endpoint_attached(
             epd,
             endpoint_info,
             (PRESTypePluginGetSerializedSampleMaxSizeFunction)
-            FBTypePlugin_get_serialized_sample_max_size, epd,
+            FBPlugin_get_serialized_sample_max_size, epd,
             (PRESTypePluginGetSerializedSampleSizeFunction)
             PRESTypePlugin_interpretedGetSerializedSampleSize,
             epd) == RTI_FALSE) {
@@ -1087,49 +1087,49 @@ FBTypePlugin_on_endpoint_attached(
 }
 
 void 
-FBTypePlugin_on_endpoint_detached(
+FBPlugin_on_endpoint_detached(
     PRESTypePluginEndpointData endpoint_data)
 {
     PRESTypePluginDefaultEndpointData_delete(endpoint_data);
 }
 
 void    
-FBTypePlugin_return_sample(
+FBPlugin_return_sample(
     PRESTypePluginEndpointData endpoint_data,
-    FBType *sample,
+    FB *sample,
     void *handle)
 {
-    FBType_finalize_optional_members(sample, RTI_TRUE);
+    FB_finalize_optional_members(sample, RTI_TRUE);
 
     PRESTypePluginDefaultEndpointData_returnSample(
         endpoint_data, sample, handle);
 }
 
 RTIBool 
-FBTypePlugin_copy_sample(
+FBPlugin_copy_sample(
     PRESTypePluginEndpointData endpoint_data,
-    FBType *dst,
-    const FBType *src)
+    FB *dst,
+    const FB *src)
 {
     if (endpoint_data) {} /* To avoid warnings */
-    return FBTypePluginSupport_copy_data(dst,src);
+    return FBPluginSupport_copy_data(dst,src);
 }
 
 /* ----------------------------------------------------------------------------
 (De)Serialize functions:
 * ------------------------------------------------------------------------- */
 unsigned int 
-FBTypePlugin_get_serialized_sample_max_size(
+FBPlugin_get_serialized_sample_max_size(
     PRESTypePluginEndpointData endpoint_data,
     RTIBool include_encapsulation,
     RTIEncapsulationId encapsulation_id,
     unsigned int current_alignment);
 
 RTIBool
-FBTypePlugin_serialize_to_cdr_buffer_ex(
+FBPlugin_serialize_to_cdr_buffer_ex(
     char *buffer,
     unsigned int *length,
-    const FBType *sample,
+    const FB *sample,
     DDS_DataRepresentationId_t representation)
 {
     RTIEncapsulationId encapsulationId = RTI_CDR_ENCAPSULATION_ID_INVALID;
@@ -1151,8 +1151,8 @@ FBTypePlugin_serialize_to_cdr_buffer_ex(
     epd.typePlugin = &plugin;
     epd.programContext.endpointPluginData = &epd;
     plugin.typeCode = (struct RTICdrTypeCode *)
-    FBType_get_typecode();
-    pd.programs = FBTypePlugin_get_programs();
+    FB_get_typecode();
+    pd.programs = FBPlugin_get_programs();
     if (pd.programs == NULL) {
         return RTI_FALSE;
     }
@@ -1165,7 +1165,7 @@ FBTypePlugin_serialize_to_cdr_buffer_ex(
     }
 
     epd._maxSizeSerializedSample =
-    FBTypePlugin_get_serialized_sample_max_size(
+    FBPlugin_get_serialized_sample_max_size(
         (PRESTypePluginEndpointData)&epd, 
         RTI_TRUE, 
         encapsulationId,
@@ -1204,12 +1204,12 @@ FBTypePlugin_serialize_to_cdr_buffer_ex(
 }
 
 RTIBool
-FBTypePlugin_serialize_to_cdr_buffer(
+FBPlugin_serialize_to_cdr_buffer(
     char *buffer,
     unsigned int *length,
-    const FBType *sample)
+    const FB *sample)
 {
-    return FBTypePlugin_serialize_to_cdr_buffer_ex(
+    return FBPlugin_serialize_to_cdr_buffer_ex(
         buffer,
         length,
         sample,
@@ -1217,8 +1217,8 @@ FBTypePlugin_serialize_to_cdr_buffer(
 }
 
 RTIBool
-FBTypePlugin_deserialize_from_cdr_buffer(
-    FBType *sample,
+FBPlugin_deserialize_from_cdr_buffer(
+    FB *sample,
     const char * buffer,
     unsigned int length)
 {
@@ -1234,8 +1234,8 @@ FBTypePlugin_deserialize_from_cdr_buffer(
     epd.typePlugin = &plugin;
     epd.programContext.endpointPluginData = &epd;
     plugin.typeCode = (struct RTICdrTypeCode *)
-    FBType_get_typecode();
-    pd.programs = FBTypePlugin_get_programs();
+    FB_get_typecode();
+    pd.programs = FBPlugin_get_programs();
     if (pd.programs == NULL) {
         return RTI_FALSE;
     }
@@ -1246,7 +1246,7 @@ FBTypePlugin_deserialize_from_cdr_buffer(
     RTICdrStream_init(&stream);
     RTICdrStream_set(&stream, (char *)buffer, length);
 
-    FBType_finalize_optional_members(sample, RTI_TRUE);
+    FB_finalize_optional_members(sample, RTI_TRUE);
     return PRESTypePlugin_interpretedDeserialize( 
         (PRESTypePluginEndpointData)&epd, sample,
         &stream, RTI_TRUE, RTI_TRUE, 
@@ -1255,8 +1255,8 @@ FBTypePlugin_deserialize_from_cdr_buffer(
 
 #ifndef NDDS_STANDALONE_TYPE
 DDS_ReturnCode_t
-FBTypePlugin_data_to_string(
-    const FBType *sample,
+FBPlugin_data_to_string(
+    const FB *sample,
     char *str,
     DDS_UnsignedLong *str_size, 
     const struct DDS_PrintFormatProperty *property)
@@ -1278,7 +1278,7 @@ FBTypePlugin_data_to_string(
     if (property == NULL) {
         return DDS_RETCODE_BAD_PARAMETER;
     }
-    if (!FBTypePlugin_serialize_to_cdr_buffer(
+    if (!FBPlugin_serialize_to_cdr_buffer(
         NULL, 
         &length, 
         sample)) {
@@ -1290,7 +1290,7 @@ FBTypePlugin_data_to_string(
         return DDS_RETCODE_ERROR;
     }
 
-    if (!FBTypePlugin_serialize_to_cdr_buffer(
+    if (!FBPlugin_serialize_to_cdr_buffer(
         buffer, 
         &length, 
         sample)) {
@@ -1298,7 +1298,7 @@ FBTypePlugin_data_to_string(
         return DDS_RETCODE_ERROR;
     }
     data = DDS_DynamicData_new(
-        FBType_get_typecode(), 
+        FB_get_typecode(), 
         &DDS_DYNAMIC_DATA_PROPERTY_DEFAULT);
     if (data == NULL) {
         RTIOsapiHeap_freeBuffer(buffer);
@@ -1339,7 +1339,7 @@ FBTypePlugin_data_to_string(
 #endif
 
 unsigned int 
-FBTypePlugin_get_serialized_sample_max_size(
+FBPlugin_get_serialized_sample_max_size(
     PRESTypePluginEndpointData endpoint_data,
     RTIBool include_encapsulation,
     RTIEncapsulationId encapsulation_id,
@@ -1363,14 +1363,14 @@ Key Management functions:
 * -------------------------------------------------------------------------------------- */
 
 PRESTypePluginKeyKind 
-FBTypePlugin_get_key_kind(void)
+FBPlugin_get_key_kind(void)
 {
     return PRES_TYPEPLUGIN_USER_KEY;
 }
 
-RTIBool FBTypePlugin_deserialize_key(
+RTIBool FBPlugin_deserialize_key(
     PRESTypePluginEndpointData endpoint_data,
-    FBType **sample, 
+    FB **sample, 
     RTIBool * drop_sample,
     struct RTICdrStream *stream,
     RTIBool deserialize_encapsulation,
@@ -1393,7 +1393,7 @@ RTIBool FBTypePlugin_deserialize_key(
 }
 
 unsigned int
-FBTypePlugin_get_serialized_key_max_size(
+FBPlugin_get_serialized_key_max_size(
     PRESTypePluginEndpointData endpoint_data,
     RTIBool include_encapsulation,
     RTIEncapsulationId encapsulation_id,
@@ -1411,7 +1411,7 @@ FBTypePlugin_get_serialized_key_max_size(
 }
 
 unsigned int
-FBTypePlugin_get_serialized_key_max_size_for_keyhash(
+FBPlugin_get_serialized_key_max_size_for_keyhash(
     PRESTypePluginEndpointData endpoint_data,
     RTIEncapsulationId encapsulation_id,
     unsigned int current_alignment)
@@ -1431,10 +1431,10 @@ FBTypePlugin_get_serialized_key_max_size_for_keyhash(
 }
 
 RTIBool 
-FBTypePlugin_instance_to_key(
+FBPlugin_instance_to_key(
     PRESTypePluginEndpointData endpoint_data,
-    FBTypeKeyHolder *dst, 
-    const FBType *src)
+    FBKeyHolder *dst, 
+    const FB *src)
 {
     if (endpoint_data) {} /* To avoid warnings */   
 
@@ -1447,10 +1447,10 @@ FBTypePlugin_instance_to_key(
 }
 
 RTIBool 
-FBTypePlugin_key_to_instance(
+FBPlugin_key_to_instance(
     PRESTypePluginEndpointData endpoint_data,
-    FBType *dst, const
-    FBTypeKeyHolder *src)
+    FB *dst, const
+    FBKeyHolder *src)
 {
     if (endpoint_data) {} /* To avoid warnings */   
     if (!RTICdrType_copyStringEx (
@@ -1462,10 +1462,10 @@ FBTypePlugin_key_to_instance(
 }
 
 RTIBool 
-FBTypePlugin_instance_to_keyhash(
+FBPlugin_instance_to_keyhash(
     PRESTypePluginEndpointData endpoint_data,
     DDS_KeyHash_t *keyhash,
-    const FBType *instance,
+    const FB *instance,
     RTIEncapsulationId encapsulationId)
 {
     struct RTICdrStream * md5Stream = NULL;
@@ -1562,15 +1562,15 @@ FBTypePlugin_instance_to_keyhash(
 }
 
 RTIBool 
-FBTypePlugin_serialized_sample_to_keyhash(
+FBPlugin_serialized_sample_to_keyhash(
     PRESTypePluginEndpointData endpoint_data,
     struct RTICdrStream *stream, 
     DDS_KeyHash_t *keyhash,
     RTIBool deserialize_encapsulation,
     void *endpoint_plugin_qos) 
 {   
-    FBType * sample = NULL;
-    sample = (FBType *)
+    FB * sample = NULL;
+    sample = (FB *)
     PRESTypePluginDefaultEndpointData_getTempSample(endpoint_data);
     if (sample == NULL) {
         return RTI_FALSE;
@@ -1585,7 +1585,7 @@ FBTypePlugin_serialized_sample_to_keyhash(
         endpoint_plugin_qos)) {
         return RTI_FALSE;
     }
-    if (!FBTypePlugin_instance_to_keyhash(
+    if (!FBPlugin_instance_to_keyhash(
         endpoint_data, 
         keyhash, 
         sample,
@@ -1595,7 +1595,7 @@ FBTypePlugin_serialized_sample_to_keyhash(
     return RTI_TRUE;
 }
 
-struct RTIXCdrInterpreterPrograms *FBTypePlugin_get_programs()
+struct RTIXCdrInterpreterPrograms *FBPlugin_get_programs()
 {
     struct RTIXCdrInterpreterProgramsGenProperty programProperty =
     RTIXCdrInterpreterProgramsGenProperty_INITIALIZER;
@@ -1611,7 +1611,7 @@ struct RTIXCdrInterpreterPrograms *FBTypePlugin_get_programs()
     retPrograms =
     DDS_TypeCodeFactory_assert_programs_in_global_list(
         DDS_TypeCodeFactory_get_instance(),
-        FBType_get_typecode(),
+        FB_get_typecode(),
         &programProperty,
         RTI_XCDR_SER_PROGRAM
         | RTI_XCDR_DESER_PROGRAM
@@ -1624,7 +1624,7 @@ struct RTIXCdrInterpreterPrograms *FBTypePlugin_get_programs()
 /* ------------------------------------------------------------------------
 * Plug-in Installation Methods
 * ------------------------------------------------------------------------ */
-struct PRESTypePlugin *FBTypePlugin_new(void) 
+struct PRESTypePlugin *FBPlugin_new(void) 
 { 
     struct PRESTypePlugin *plugin = NULL;
     const struct PRESTypePluginVersion PLUGIN_VERSION = 
@@ -1642,29 +1642,29 @@ struct PRESTypePlugin *FBTypePlugin_new(void)
     /* set up parent's function pointers */
     plugin->onParticipantAttached =
     (PRESTypePluginOnParticipantAttachedCallback)
-    FBTypePlugin_on_participant_attached;
+    FBPlugin_on_participant_attached;
     plugin->onParticipantDetached =
     (PRESTypePluginOnParticipantDetachedCallback)
-    FBTypePlugin_on_participant_detached;
+    FBPlugin_on_participant_detached;
     plugin->onEndpointAttached =
     (PRESTypePluginOnEndpointAttachedCallback)
-    FBTypePlugin_on_endpoint_attached;
+    FBPlugin_on_endpoint_attached;
     plugin->onEndpointDetached =
     (PRESTypePluginOnEndpointDetachedCallback)
-    FBTypePlugin_on_endpoint_detached;
+    FBPlugin_on_endpoint_detached;
 
     plugin->copySampleFnc =
     (PRESTypePluginCopySampleFunction)
-    FBTypePlugin_copy_sample;
+    FBPlugin_copy_sample;
     plugin->createSampleFnc =
     (PRESTypePluginCreateSampleFunction)
-    FBTypePlugin_create_sample;
+    FBPlugin_create_sample;
     plugin->destroySampleFnc =
     (PRESTypePluginDestroySampleFunction)
-    FBTypePlugin_destroy_sample;
+    FBPlugin_destroy_sample;
     plugin->finalizeOptionalMembersFnc =
     (PRESTypePluginFinalizeOptionalMembersFunction)
-    FBType_finalize_optional_members;
+    FB_finalize_optional_members;
 
     plugin->serializeFnc = 
     (PRESTypePluginSerializeFunction) PRESTypePlugin_interpretedSerialize;
@@ -1672,69 +1672,69 @@ struct PRESTypePlugin *FBTypePlugin_new(void)
     (PRESTypePluginDeserializeFunction) PRESTypePlugin_interpretedDeserializeWithAlloc;
     plugin->getSerializedSampleMaxSizeFnc =
     (PRESTypePluginGetSerializedSampleMaxSizeFunction)
-    FBTypePlugin_get_serialized_sample_max_size;
+    FBPlugin_get_serialized_sample_max_size;
     plugin->getSerializedSampleMinSizeFnc =
     (PRESTypePluginGetSerializedSampleMinSizeFunction)
     PRESTypePlugin_interpretedGetSerializedSampleMinSize;
     plugin->getDeserializedSampleMaxSizeFnc = NULL; 
     plugin->getSampleFnc =
     (PRESTypePluginGetSampleFunction)
-    FBTypePlugin_get_sample;
+    FBPlugin_get_sample;
     plugin->returnSampleFnc =
     (PRESTypePluginReturnSampleFunction)
-    FBTypePlugin_return_sample;
+    FBPlugin_return_sample;
     plugin->getKeyKindFnc =
     (PRESTypePluginGetKeyKindFunction)
-    FBTypePlugin_get_key_kind;
+    FBPlugin_get_key_kind;
 
     plugin->getSerializedKeyMaxSizeFnc =   
     (PRESTypePluginGetSerializedKeyMaxSizeFunction)
-    FBTypePlugin_get_serialized_key_max_size;
+    FBPlugin_get_serialized_key_max_size;
     plugin->serializeKeyFnc =
     (PRESTypePluginSerializeKeyFunction)
     PRESTypePlugin_interpretedSerializeKey;
     plugin->deserializeKeyFnc =
     (PRESTypePluginDeserializeKeyFunction)
-    FBTypePlugin_deserialize_key;
+    FBPlugin_deserialize_key;
     plugin->deserializeKeySampleFnc =
     (PRESTypePluginDeserializeKeySampleFunction)
     PRESTypePlugin_interpretedDeserializeKey;
 
     plugin-> instanceToKeyHashFnc = 
     (PRESTypePluginInstanceToKeyHashFunction)
-    FBTypePlugin_instance_to_keyhash;
+    FBPlugin_instance_to_keyhash;
     plugin->serializedSampleToKeyHashFnc = 
     (PRESTypePluginSerializedSampleToKeyHashFunction)
-    FBTypePlugin_serialized_sample_to_keyhash;
+    FBPlugin_serialized_sample_to_keyhash;
 
     plugin->getKeyFnc =
     (PRESTypePluginGetKeyFunction)
-    FBTypePlugin_get_key;
+    FBPlugin_get_key;
     plugin->returnKeyFnc =
     (PRESTypePluginReturnKeyFunction)
-    FBTypePlugin_return_key;
+    FBPlugin_return_key;
 
     plugin->instanceToKeyFnc =
     (PRESTypePluginInstanceToKeyFunction)
-    FBTypePlugin_instance_to_key;
+    FBPlugin_instance_to_key;
     plugin->keyToInstanceFnc =
     (PRESTypePluginKeyToInstanceFunction)
-    FBTypePlugin_key_to_instance;
+    FBPlugin_key_to_instance;
     plugin->serializedKeyToKeyHashFnc = NULL; /* Not supported yet */
     #ifdef NDDS_STANDALONE_TYPE
     plugin->typeCode = NULL; 
     #else
-    plugin->typeCode =  (struct RTICdrTypeCode *)FBType_get_typecode();
+    plugin->typeCode =  (struct RTICdrTypeCode *)FB_get_typecode();
     #endif
     plugin->languageKind = PRES_TYPEPLUGIN_DDS_TYPE;
 
     /* Serialized buffer */
     plugin->getBuffer = 
     (PRESTypePluginGetBufferFunction)
-    FBTypePlugin_get_buffer;
+    FBPlugin_get_buffer;
     plugin->returnBuffer = 
     (PRESTypePluginReturnBufferFunction)
-    FBTypePlugin_return_buffer;
+    FBPlugin_return_buffer;
     plugin->getBufferWithParams = NULL;
     plugin->returnBufferWithParams = NULL;  
     plugin->getSerializedSampleSizeFnc =
@@ -1747,13 +1747,13 @@ struct PRESTypePlugin *FBTypePlugin_new(void)
     plugin->validateWriterLoanedSampleFnc = NULL;
     plugin->setWriterLoanedSampleSerializedStateFnc = NULL;
 
-    plugin->endpointTypeName = FBTypeTYPENAME;
+    plugin->endpointTypeName = FBTYPENAME;
     plugin->isMetpType = RTI_FALSE;
     return plugin;
 }
 
 void
-FBTypePlugin_delete(struct PRESTypePlugin *plugin)
+FBPlugin_delete(struct PRESTypePlugin *plugin)
 {
     RTIOsapiHeap_freeStructure(plugin);
 } 

@@ -8,8 +8,8 @@ For more information, type 'rtiddsgen -help' at a command shell
 or consult the RTI Connext manual.
 */
 
-#ifndef fbSupport_1282814526_h
-#define fbSupport_1282814526_h
+#ifndef fbSupport_1282814522_h
+#define fbSupport_1282814522_h
 
 /* Uses */
 #include "fb.h"
@@ -68,9 +68,9 @@ implementing generics in C and C++.
 
 #endif
 
-DDS_TYPESUPPORT_C(FBTypeTypeSupport, FBType);
-DDS_DATAWRITER_WITH_DATA_CONSTRUCTOR_METHODS_C(FBTypeDataWriter, FBType);
-DDS_DATAREADER_C(FBTypeDataReader, FBTypeSeq, FBType);
+DDS_TYPESUPPORT_C(FBTypeSupport, FB);
+DDS_DATAWRITER_WITH_DATA_CONSTRUCTOR_METHODS_C(FBDataWriter, FB);
+DDS_DATAREADER_C(FBDataReader, FBSeq, FB);
 
 #if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
 /* If the code is building on Windows, stop exporting symbols.
@@ -79,5 +79,5 @@ DDS_DATAREADER_C(FBTypeDataReader, FBTypeSeq, FBType);
 #define NDDSUSERDllExport
 #endif
 
-#endif  /* fbSupport_1282814526_h */
+#endif  /* fbSupport_1282814522_h */
 

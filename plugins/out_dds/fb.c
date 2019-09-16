@@ -383,17 +383,17 @@ RTIBool Record_copy(
 #undef T
 
 /* ========================================================================= */
-const char *FBTypeTYPENAME = "FBType";
+const char *FBTYPENAME = "FB";
 
 #ifndef NDDS_STANDALONE_TYPE
-DDS_TypeCode* FBType_get_typecode()
+DDS_TypeCode* FB_get_typecode()
 {
     static RTIBool is_initialized = RTI_FALSE;
 
-    static DDS_TypeCode FBType_g_tc_tag_string = DDS_INITIALIZE_STRING_TYPECODE((255));
-    static DDS_TypeCode FBType_g_tc_records_sequence = DDS_INITIALIZE_SEQUENCE_TYPECODE(((MAX_RECORDS)),NULL);
+    static DDS_TypeCode FB_g_tc_tag_string = DDS_INITIALIZE_STRING_TYPECODE((255));
+    static DDS_TypeCode FB_g_tc_records_sequence = DDS_INITIALIZE_SEQUENCE_TYPECODE(((MAX_RECORDS)),NULL);
 
-    static DDS_TypeCode_Member FBType_g_tc_members[3]=
+    static DDS_TypeCode_Member FB_g_tc_members[3]=
     {
 
         {
@@ -452,106 +452,106 @@ DDS_TypeCode* FBType_get_typecode()
         }
     };
 
-    static DDS_TypeCode FBType_g_tc =
+    static DDS_TypeCode FB_g_tc =
     {{
             DDS_TK_STRUCT, /* Kind */
             DDS_BOOLEAN_FALSE, /* Ignored */
             -1, /*Ignored*/
-            (char *)"FBType", /* Name */
+            (char *)"FB", /* Name */
             NULL, /* Ignored */      
             0, /* Ignored */
             0, /* Ignored */
             NULL, /* Ignored */
             3, /* Number of members */
-            FBType_g_tc_members, /* Members */
+            FB_g_tc_members, /* Members */
             DDS_VM_NONE, /* Ignored */
             RTICdrTypeCodeAnnotations_INITIALIZER,
             DDS_BOOLEAN_TRUE, /* _isCopyable */
             NULL, /* _sampleAccessInfo: assigned later */
             NULL /* _typePlugin: assigned later */
-        }}; /* Type code for FBType*/
+        }}; /* Type code for FB*/
 
     if (is_initialized) {
-        return &FBType_g_tc;
+        return &FB_g_tc;
     }
 
-    FBType_g_tc._data._annotations._allowedDataRepresentationMask = 5;
+    FB_g_tc._data._annotations._allowedDataRepresentationMask = 5;
 
-    FBType_g_tc_records_sequence._data._typeCode = (RTICdrTypeCode *)Record_get_typecode();
-    FBType_g_tc_records_sequence._data._sampleAccessInfo = &DDS_g_sai_seq;
-    FBType_g_tc_members[0]._representation._typeCode = (RTICdrTypeCode *)&DDS_g_tc_longlong;
-    FBType_g_tc_members[1]._representation._typeCode = (RTICdrTypeCode *)&FBType_g_tc_tag_string;
-    FBType_g_tc_members[2]._representation._typeCode = (RTICdrTypeCode *)& FBType_g_tc_records_sequence;
+    FB_g_tc_records_sequence._data._typeCode = (RTICdrTypeCode *)Record_get_typecode();
+    FB_g_tc_records_sequence._data._sampleAccessInfo = &DDS_g_sai_seq;
+    FB_g_tc_members[0]._representation._typeCode = (RTICdrTypeCode *)&DDS_g_tc_longlong;
+    FB_g_tc_members[1]._representation._typeCode = (RTICdrTypeCode *)&FB_g_tc_tag_string;
+    FB_g_tc_members[2]._representation._typeCode = (RTICdrTypeCode *)& FB_g_tc_records_sequence;
 
     /* Initialize the values for member annotations. */
-    FBType_g_tc_members[0]._annotations._defaultValue._d = RTI_XCDR_TK_LONGLONG;
-    FBType_g_tc_members[0]._annotations._defaultValue._u.long_long_value = 0ll;
-    FBType_g_tc_members[0]._annotations._minValue._d = RTI_XCDR_TK_LONGLONG;
-    FBType_g_tc_members[0]._annotations._minValue._u.long_long_value = RTIXCdrLongLong_MIN;
-    FBType_g_tc_members[0]._annotations._maxValue._d = RTI_XCDR_TK_LONGLONG;
-    FBType_g_tc_members[0]._annotations._maxValue._u.long_long_value = RTIXCdrLongLong_MAX;
+    FB_g_tc_members[0]._annotations._defaultValue._d = RTI_XCDR_TK_LONGLONG;
+    FB_g_tc_members[0]._annotations._defaultValue._u.long_long_value = 0ll;
+    FB_g_tc_members[0]._annotations._minValue._d = RTI_XCDR_TK_LONGLONG;
+    FB_g_tc_members[0]._annotations._minValue._u.long_long_value = RTIXCdrLongLong_MIN;
+    FB_g_tc_members[0]._annotations._maxValue._d = RTI_XCDR_TK_LONGLONG;
+    FB_g_tc_members[0]._annotations._maxValue._u.long_long_value = RTIXCdrLongLong_MAX;
 
-    FBType_g_tc_members[1]._annotations._defaultValue._d = RTI_XCDR_TK_STRING;
-    FBType_g_tc_members[1]._annotations._defaultValue._u.string_value = (DDS_Char *) "";
+    FB_g_tc_members[1]._annotations._defaultValue._d = RTI_XCDR_TK_STRING;
+    FB_g_tc_members[1]._annotations._defaultValue._u.string_value = (DDS_Char *) "";
 
-    FBType_g_tc._data._sampleAccessInfo =
-    FBType_get_sample_access_info();
-    FBType_g_tc._data._typePlugin =
-    FBType_get_type_plugin_info();    
+    FB_g_tc._data._sampleAccessInfo =
+    FB_get_sample_access_info();
+    FB_g_tc._data._typePlugin =
+    FB_get_type_plugin_info();    
 
     is_initialized = RTI_TRUE;
 
-    return &FBType_g_tc;
+    return &FB_g_tc;
 }
 
-RTIXCdrSampleAccessInfo *FBType_get_sample_access_info()
+RTIXCdrSampleAccessInfo *FB_get_sample_access_info()
 {
     static RTIBool is_initialized = RTI_FALSE;
 
-    static RTIXCdrMemberAccessInfo FBType_g_memberAccessInfos[3] =
+    static RTIXCdrMemberAccessInfo FB_g_memberAccessInfos[3] =
     {RTIXCdrMemberAccessInfo_INITIALIZER};
 
-    static RTIXCdrSampleAccessInfo FBType_g_sampleAccessInfo = 
+    static RTIXCdrSampleAccessInfo FB_g_sampleAccessInfo = 
     RTIXCdrSampleAccessInfo_INITIALIZER;
 
     if (is_initialized) {
-        return (RTIXCdrSampleAccessInfo*) &FBType_g_sampleAccessInfo;
+        return (RTIXCdrSampleAccessInfo*) &FB_g_sampleAccessInfo;
     }
 
-    FBType_g_memberAccessInfos[0].bindingMemberValueOffset[0] = 
-    (RTIXCdrUnsignedLong) RTIXCdrUtility_pointerToULongLong(&((FBType *)NULL)->ts);
+    FB_g_memberAccessInfos[0].bindingMemberValueOffset[0] = 
+    (RTIXCdrUnsignedLong) RTIXCdrUtility_pointerToULongLong(&((FB *)NULL)->ts);
 
-    FBType_g_memberAccessInfos[1].bindingMemberValueOffset[0] = 
-    (RTIXCdrUnsignedLong) RTIXCdrUtility_pointerToULongLong(&((FBType *)NULL)->tag);
+    FB_g_memberAccessInfos[1].bindingMemberValueOffset[0] = 
+    (RTIXCdrUnsignedLong) RTIXCdrUtility_pointerToULongLong(&((FB *)NULL)->tag);
 
-    FBType_g_memberAccessInfos[2].bindingMemberValueOffset[0] = 
-    (RTIXCdrUnsignedLong) RTIXCdrUtility_pointerToULongLong(&((FBType *)NULL)->records);
+    FB_g_memberAccessInfos[2].bindingMemberValueOffset[0] = 
+    (RTIXCdrUnsignedLong) RTIXCdrUtility_pointerToULongLong(&((FB *)NULL)->records);
 
-    FBType_g_sampleAccessInfo.memberAccessInfos = 
-    FBType_g_memberAccessInfos;
+    FB_g_sampleAccessInfo.memberAccessInfos = 
+    FB_g_memberAccessInfos;
 
     {
-        size_t candidateTypeSize = sizeof(FBType);
+        size_t candidateTypeSize = sizeof(FB);
 
         if (candidateTypeSize > RTIXCdrUnsignedLong_MAX) {
-            FBType_g_sampleAccessInfo.typeSize[0] =
+            FB_g_sampleAccessInfo.typeSize[0] =
             RTIXCdrUnsignedLong_MAX;
         } else {
-            FBType_g_sampleAccessInfo.typeSize[0] =
+            FB_g_sampleAccessInfo.typeSize[0] =
             (RTIXCdrUnsignedLong) candidateTypeSize;
         }
     }
 
-    FBType_g_sampleAccessInfo.languageBinding = 
+    FB_g_sampleAccessInfo.languageBinding = 
     RTI_XCDR_TYPE_BINDING_C ;
 
     is_initialized = RTI_TRUE;
-    return (RTIXCdrSampleAccessInfo*) &FBType_g_sampleAccessInfo;
+    return (RTIXCdrSampleAccessInfo*) &FB_g_sampleAccessInfo;
 }
 
-RTIXCdrTypePlugin *FBType_get_type_plugin_info()
+RTIXCdrTypePlugin *FB_get_type_plugin_info()
 {
-    static RTIXCdrTypePlugin FBType_g_typePlugin = 
+    static RTIXCdrTypePlugin FB_g_typePlugin = 
     {
         NULL, /* serialize */
         NULL, /* serialize_key */
@@ -564,24 +564,24 @@ RTIXCdrTypePlugin *FBType_get_type_plugin_info()
         NULL, /* get_serialized_sample_min_size */
         NULL, /* serialized_sample_to_key */
         (RTIXCdrTypePluginInitializeSampleFunction) 
-        FBType_initialize_ex,
+        FB_initialize_ex,
         NULL,
         (RTIXCdrTypePluginFinalizeSampleFunction)
-        FBType_finalize_w_return,
+        FB_finalize_w_return,
         NULL
     };
 
-    return &FBType_g_typePlugin;
+    return &FB_g_typePlugin;
 }
 #endif
 
-RTIBool FBType_initialize(
-    FBType* sample) {
-    return FBType_initialize_ex(sample,RTI_TRUE,RTI_TRUE);
+RTIBool FB_initialize(
+    FB* sample) {
+    return FB_initialize_ex(sample,RTI_TRUE,RTI_TRUE);
 }
 
-RTIBool FBType_initialize_ex(
-    FBType* sample,RTIBool allocatePointers, RTIBool allocateMemory)
+RTIBool FB_initialize_ex(
+    FB* sample,RTIBool allocatePointers, RTIBool allocateMemory)
 {
 
     struct DDS_TypeAllocationParams_t allocParams =
@@ -590,13 +590,13 @@ RTIBool FBType_initialize_ex(
     allocParams.allocate_pointers =  (DDS_Boolean)allocatePointers;
     allocParams.allocate_memory = (DDS_Boolean)allocateMemory;
 
-    return FBType_initialize_w_params(
+    return FB_initialize_w_params(
         sample,&allocParams);
 
 }
 
-RTIBool FBType_initialize_w_params(
-    FBType* sample, const struct DDS_TypeAllocationParams_t * allocParams)
+RTIBool FB_initialize_w_params(
+    FB* sample, const struct DDS_TypeAllocationParams_t * allocParams)
 {
 
     void* buffer = NULL;
@@ -655,23 +655,23 @@ RTIBool FBType_initialize_w_params(
     return RTI_TRUE;
 }
 
-RTIBool FBType_finalize_w_return(
-    FBType* sample)
+RTIBool FB_finalize_w_return(
+    FB* sample)
 {
-    FBType_finalize_ex(sample, RTI_TRUE);
+    FB_finalize_ex(sample, RTI_TRUE);
 
     return RTI_TRUE;
 }
 
-void FBType_finalize(
-    FBType* sample)
+void FB_finalize(
+    FB* sample)
 {
 
-    FBType_finalize_ex(sample,RTI_TRUE);
+    FB_finalize_ex(sample,RTI_TRUE);
 }
 
-void FBType_finalize_ex(
-    FBType* sample,RTIBool deletePointers)
+void FB_finalize_ex(
+    FB* sample,RTIBool deletePointers)
 {
     struct DDS_TypeDeallocationParams_t deallocParams =
     DDS_TYPE_DEALLOCATION_PARAMS_DEFAULT;
@@ -682,12 +682,12 @@ void FBType_finalize_ex(
 
     deallocParams.delete_pointers = (DDS_Boolean)deletePointers;
 
-    FBType_finalize_w_params(
+    FB_finalize_w_params(
         sample,&deallocParams);
 }
 
-void FBType_finalize_w_params(
-    FBType* sample,const struct DDS_TypeDeallocationParams_t * deallocParams)
+void FB_finalize_w_params(
+    FB* sample,const struct DDS_TypeDeallocationParams_t * deallocParams)
 {
 
     if (sample==NULL) {
@@ -713,8 +713,8 @@ void FBType_finalize_w_params(
 
 }
 
-void FBType_finalize_optional_members(
-    FBType* sample, RTIBool deletePointers)
+void FB_finalize_optional_members(
+    FB* sample, RTIBool deletePointers)
 {
     struct DDS_TypeDeallocationParams_t deallocParamsTmp =
     DDS_TYPE_DEALLOCATION_PARAMS_DEFAULT;
@@ -743,9 +743,9 @@ void FBType_finalize_optional_members(
 
 }
 
-RTIBool FBType_copy(
-    FBType* dst,
-    const FBType* src)
+RTIBool FB_copy(
+    FB* dst,
+    const FB* src)
 {
 
     if (dst == NULL || src == NULL) {
@@ -775,15 +775,15 @@ RTIBool FBType_copy(
 *
 * Defines:  TSeq, T
 *
-* Configure and implement 'FBType' sequence class.
+* Configure and implement 'FB' sequence class.
 */
-#define T FBType
-#define TSeq FBTypeSeq
+#define T FB
+#define TSeq FBSeq
 
-#define T_initialize_w_params FBType_initialize_w_params
+#define T_initialize_w_params FB_initialize_w_params
 
-#define T_finalize_w_params   FBType_finalize_w_params
-#define T_copy       FBType_copy
+#define T_finalize_w_params   FB_finalize_w_params
+#define T_copy       FB_copy
 
 #ifndef NDDS_STANDALONE_TYPE
 #include "dds_c/generic/dds_c_sequence_TSeq.gen"

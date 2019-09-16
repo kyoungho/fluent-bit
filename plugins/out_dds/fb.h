@@ -9,8 +9,8 @@ For more information, type 'rtiddsgen -help' at a command shell
 or consult the RTI Connext manual.
 */
 
-#ifndef fb_1282814526_h
-#define fb_1282814526_h
+#ifndef fb_1282814522_h
+#define fb_1282814522_h
 
 #ifndef NDDS_STANDALONE_TYPE
 #ifndef ndds_c_h
@@ -91,15 +91,15 @@ RTIBool Record_copy(
 #define NDDSUSERDllExport
 #endif
 
-extern const char *FBTypeTYPENAME;
+extern const char *FBTYPENAME;
 
-typedef struct FBType {
+typedef struct FB {
 
     DDS_LongLong   ts ;
     DDS_Char *   tag ;
     struct    RecordSeq  records ;
 
-} FBType ;
+} FB ;
 #if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
 /* If the code is building on Windows, start exporting symbols.
 */
@@ -108,51 +108,51 @@ typedef struct FBType {
 #endif
 
 #ifndef NDDS_STANDALONE_TYPE
-NDDSUSERDllExport DDS_TypeCode* FBType_get_typecode(void); /* Type code */
-NDDSUSERDllExport RTIXCdrTypePlugin *FBType_get_type_plugin_info(void);
-NDDSUSERDllExport RTIXCdrSampleAccessInfo *FBType_get_sample_access_info(void);
+NDDSUSERDllExport DDS_TypeCode* FB_get_typecode(void); /* Type code */
+NDDSUSERDllExport RTIXCdrTypePlugin *FB_get_type_plugin_info(void);
+NDDSUSERDllExport RTIXCdrSampleAccessInfo *FB_get_sample_access_info(void);
 #endif
 
-DDS_SEQUENCE(FBTypeSeq, FBType);
+DDS_SEQUENCE(FBSeq, FB);
 
 NDDSUSERDllExport
-RTIBool FBType_initialize(
-    FBType* self);
+RTIBool FB_initialize(
+    FB* self);
 
 NDDSUSERDllExport
-RTIBool FBType_initialize_ex(
-    FBType* self,RTIBool allocatePointers,RTIBool allocateMemory);
+RTIBool FB_initialize_ex(
+    FB* self,RTIBool allocatePointers,RTIBool allocateMemory);
 
 NDDSUSERDllExport
-RTIBool FBType_initialize_w_params(
-    FBType* self,
+RTIBool FB_initialize_w_params(
+    FB* self,
     const struct DDS_TypeAllocationParams_t * allocParams);  
 
 NDDSUSERDllExport
-RTIBool FBType_finalize_w_return(
-    FBType* self);
+RTIBool FB_finalize_w_return(
+    FB* self);
 
 NDDSUSERDllExport
-void FBType_finalize(
-    FBType* self);
+void FB_finalize(
+    FB* self);
 
 NDDSUSERDllExport
-void FBType_finalize_ex(
-    FBType* self,RTIBool deletePointers);
+void FB_finalize_ex(
+    FB* self,RTIBool deletePointers);
 
 NDDSUSERDllExport
-void FBType_finalize_w_params(
-    FBType* self,
+void FB_finalize_w_params(
+    FB* self,
     const struct DDS_TypeDeallocationParams_t * deallocParams);
 
 NDDSUSERDllExport
-void FBType_finalize_optional_members(
-    FBType* self, RTIBool deletePointers);  
+void FB_finalize_optional_members(
+    FB* self, RTIBool deletePointers);  
 
 NDDSUSERDllExport
-RTIBool FBType_copy(
-    FBType* dst,
-    const FBType* src);
+RTIBool FB_copy(
+    FB* dst,
+    const FB* src);
 
 #if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
 /* If the code is building on Windows, stop exporting symbols.

@@ -128,7 +128,7 @@ TDataWriter,
 TDataReader,
 TTypeSupport
 
-Configure and implement 'FBType' support classes.
+Configure and implement 'FB' support classes.
 
 Note: Only the #defined classes get defined
 */
@@ -144,11 +144,11 @@ Defines:   TDataWriter, TData
 */
 
 /* Requires */
-#define TTYPENAME   FBTypeTYPENAME
+#define TTYPENAME   FBTYPENAME
 
 /* Defines */
-#define TDataWriter FBTypeDataWriter
-#define TData       FBType
+#define TDataWriter FBDataWriter
+#define TData       FB
 
 #define ENABLE_TDATAWRITER_DATA_CONSTRUCTOR_METHODS
 #include "dds_c/generic/dds_c_data_TDataWriter.gen"
@@ -170,12 +170,12 @@ Defines:   TDataReader, TDataSeq, TData
 */
 
 /* Requires */
-#define TTYPENAME   FBTypeTYPENAME
+#define TTYPENAME   FBTYPENAME
 
 /* Defines */
-#define TDataReader FBTypeDataReader
-#define TDataSeq    FBTypeSeq
-#define TData       FBType
+#define TDataReader FBDataReader
+#define TDataSeq    FBSeq
+#define TData       FB
 
 #define ENABLE_TDATAREADER_DATA_CONSISTENCY_CHECK_METHOD
 #include "dds_c/generic/dds_c_data_TDataReader.gen"
@@ -199,15 +199,15 @@ Defines:   TTypeSupport, TData, TDataReader, TDataWriter
 */
 
 /* Requires */
-#define TTYPENAME    FBTypeTYPENAME
-#define TPlugin_new  FBTypePlugin_new
-#define TPlugin_delete  FBTypePlugin_delete
+#define TTYPENAME    FBTYPENAME
+#define TPlugin_new  FBPlugin_new
+#define TPlugin_delete  FBPlugin_delete
 
 /* Defines */
-#define TTypeSupport FBTypeTypeSupport
-#define TData        FBType
-#define TDataReader  FBTypeDataReader
-#define TDataWriter  FBTypeDataWriter
+#define TTypeSupport FBTypeSupport
+#define TData        FB
+#define TDataReader  FBDataReader
+#define TDataWriter  FBDataWriter
 #define TGENERATE_SER_CODE
 #ifndef NDDS_STANDALONE_TYPE
 #define TGENERATE_TYPECODE
