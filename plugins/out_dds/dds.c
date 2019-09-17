@@ -2,18 +2,19 @@
 
 static int dds_shutdown(DDS_DomainParticipant *participant)
 {
-    DDS_ReturnCode_t retcode;
     int status = 0;
+    DDS_ReturnCode_t retcode;
+
     if (participant != NULL) {
         retcode = DDS_DomainParticipant_delete_contained_entities(participant);
         if (retcode != DDS_RETCODE_OK) {
-            flb_info("delete_contained_entities error %d\n", retcode);
+            flb_error("[out_dds] delete_contained_entities error %d\n", retcode);
             status = -1;
         }
         retcode = DDS_DomainParticipantFactory_delete_participant(
             DDS_TheParticipantFactory, participant);
         if (retcode != DDS_RETCODE_OK) {
-            flb_info("delete_participant error %d\n", retcode);
+            flb_error("[out_dds] delete_participant error %d\n", retcode);
             status = -1;
         }
     }
@@ -60,7 +61,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 			DDS_TheParticipantFactory, ctx->domain_id, &DDS_PARTICIPANT_QOS_DEFAULT,
 			NULL /* listener */, DDS_STATUS_MASK_NONE);
 	if (ctx->participant == NULL) {
-		flb_info("create_participant error\n");
+		flb_error("[out_dds] create_participant error\n");
 		dds_shutdown(ctx->participant);
 		flb_errno();
 		return -1;
@@ -72,7 +73,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 			ctx->participant, &DDS_PUBLISHER_QOS_DEFAULT, NULL /* listener */,
 			DDS_STATUS_MASK_NONE);
 	if (ctx->publisher == NULL) {
-		flb_info("create_publisher error\n");
+		flb_error("[out_dds] create_publisher error\n");
 		dds_shutdown(ctx->participant);
 		flb_errno();
 		return -1;
@@ -83,7 +84,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 	retcode = FBTypeSupport_register_type(
 			ctx->participant, ctx->type_name);
 	if (retcode != DDS_RETCODE_OK) {
-		flb_info("register_type error %d\n", retcode);
+		flb_error("[out_dds] register_type error %d\n", retcode);
 		dds_shutdown(ctx->participant);
 		flb_errno();
 		return -1;
@@ -96,7 +97,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 			ctx->type_name, &DDS_TOPIC_QOS_DEFAULT, NULL /* listener */,
 			DDS_STATUS_MASK_NONE);
 	if (ctx->topic == NULL) {
-		flb_info("create_topic error\n");
+		flb_error(" [out_dds] create_topic error\n");
 		dds_shutdown(ctx->participant);
 		flb_errno();
 		return -1;
@@ -107,14 +108,14 @@ static int cb_dds_init(struct flb_output_instance *ins,
 			ctx->publisher, ctx->topic,
 			&DDS_DATAWRITER_QOS_DEFAULT, NULL /* listener */, DDS_STATUS_MASK_NONE);
 	if (ctx->writer == NULL) {
-		flb_info("create_datawriter error\n");
+		flb_error("[out_dds] create_datawriter error\n");
 		dds_shutdown(ctx->participant);
 		flb_errno();
 		return -1;
 	}
 	ctx->fb_writer = FBDataWriter_narrow(ctx->writer);
 	if (ctx->fb_writer == NULL) {
-		flb_info("DataWriter narrow error\n");
+		flb_error("[out_dds] DataWriter narrow error\n");
 		dds_shutdown(ctx->participant);
 		flb_errno();
 		return -1;
@@ -123,7 +124,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 	/* Create data sample for writing */
 	ctx->instance = FBTypeSupport_create_data_ex(DDS_BOOLEAN_TRUE);
 	if (ctx->instance == NULL) {
-		flb_info("FBTypeSupport_create_data error\n");
+		flb_error("[out_dds] FBTypeSupport_create_data error\n");
 		dds_shutdown(ctx->participant);
 		flb_errno();
 		return -1;
@@ -152,7 +153,6 @@ static void cb_dds_flush(const void *data, size_t bytes,
 		struct flb_config *config) {
 
 	int i;
-	int ret;
 	size_t off = 0;
 	struct flb_out_dds_config *ctx = out_context;
 	struct flb_time tms;
@@ -161,20 +161,16 @@ static void cb_dds_flush(const void *data, size_t bytes,
 	msgpack_object key;
 	msgpack_object value;
 	Record *record;
+	DDS_ReturnCode_t retcode;
 
 	msgpack_unpacked_init(&result);
 
 	while(msgpack_unpack_next(&result, data, bytes, &off) == MSGPACK_UNPACK_SUCCESS) {
 		flb_time_pop_from_msgpack(&tms, &result, &obj);
 
-		flb_info("tag: %s", tag);
-		flb_info("timestamp: %f", flb_time_to_double(&tms));
-		
 		strcpy(ctx->instance->tag, tag);
 		ctx->instance->ts = flb_time_to_double(&tms);
 		RecordSeq_set_length(&ctx->instance->records, obj->via.map.size);
-		flb_info("sequence lenth: %d", RecordSeq_get_length(&ctx->instance->records));
-		flb_info("sequence maximum: %d", RecordSeq_get_maximum(&ctx->instance->records));
 
 		for (i = 0; i < obj->via.map.size; i++) {
 			record = RecordSeq_get_reference(&ctx->instance->records, i);
@@ -182,7 +178,6 @@ static void cb_dds_flush(const void *data, size_t bytes,
 			value = obj->via.map.ptr[i].val;
 
 			strncpy(record->key, key.via.str.ptr, key.via.str.size);
-			flb_info("key: %s", key.via.str.ptr);
 
 			switch(value.type) {
 				case MSGPACK_OBJECT_NIL:
@@ -190,22 +185,18 @@ static void cb_dds_flush(const void *data, size_t bytes,
 				case MSGPACK_OBJECT_BOOLEAN:
 					break;
 				case MSGPACK_OBJECT_POSITIVE_INTEGER:
-					flb_info("value: %d", value.via.u64);
 					record->value._d = POSITIVE_INTEGER;
 					record->value._u.u64 = value.via.u64;
 					break;
 				case MSGPACK_OBJECT_NEGATIVE_INTEGER:
-					flb_info("value: %d", value.via.i64);
 					record->value._d = NEGATIVE_INTEGER;
 					record->value._u.u64 = value.via.i64;
 					break;
 				case MSGPACK_OBJECT_FLOAT64:
-					flb_info("value: %f", value.via.f64);
 					record->value._d = FLOAT64;
 					record->value._u.f64 = value.via.f64;
 					break;
 				case MSGPACK_OBJECT_STR:
-					flb_info("value: %s", value.via.str.ptr);
 					record->value._d = STR;
 					strcpy(record->value._u.str, value.via.str.ptr);
 					break;
@@ -220,24 +211,15 @@ static void cb_dds_flush(const void *data, size_t bytes,
 				case MSGPACK_OBJECT_MAP:
 					break;
 				default:
-					flb_warn("[%s] unknown msgpack type %i", __FUNCTION__, value.type);
+					flb_warn("[%s] unknown msgpack type %d", __FUNCTION__, value.type);
 			}
 		}
 
-		FBDataWriter_write(ctx->fb_writer, ctx->instance, &(ctx->instance_handle));
+		retcode = FBDataWriter_write(ctx->fb_writer, ctx->instance, &(ctx->instance_handle));
+		if (retcode != DDS_RETCODE_OK) {
+			flb_warn("[%s] writer error %d", __FUNCTION__, retcode);
+		}
 		RecordSeq_set_length(&ctx->instance->records, 0);
-
-		//ret = produce_message(&tms, obj, ctx, config);
-		/*
-		   if (ret == FLB_ERROR) {
-		   msgpack_unpacked_destroy(&result);
-		   FLB_OUTPUT_RETURN(FLB_ERROR);
-		   }
-		   else if (ret == FLB_RETRY) {
-		   msgpack_unpacked_destroy(&result);
-		   FLB_OUTPUT_RETURN(FLB_RETRY);
-		   }
-		   */
 	}
 
 	msgpack_unpacked_destroy(&result);
@@ -245,6 +227,9 @@ static void cb_dds_flush(const void *data, size_t bytes,
 }
 
 static int cb_dds_exit(void *data, struct flb_config *config) {
+	struct flb_out_dds_config *ctx = data;
+	
+	dds_shutdown(ctx->participant);
 	return 0;
 }
 
