@@ -528,7 +528,7 @@ DDS_TypeCode* Value_get_typecode()
 {
     static RTIBool is_initialized = RTI_FALSE;
 
-    static DDS_TypeCode Value_g_tc_str_string = DDS_INITIALIZE_STRING_TYPECODE((255));
+    static DDS_TypeCode Value_g_tc_str_string = DDS_INITIALIZE_STRING_TYPECODE(((MAX_STR_LEN)));
 
     static DDS_TypeCode_Member Value_g_tc_members[6]=
     {
@@ -855,11 +855,11 @@ RTIBool Value_initialize_w_params(
     sample->_u.f64 = 0.0;
 
     if (allocParams->allocate_memory) {
-        sample->_u.str = DDS_String_alloc((255));
+        sample->_u.str = DDS_String_alloc(((MAX_STR_LEN)));
         RTICdrType_copyStringEx(
             &sample->_u.str,
             "",
-            (255),
+            ((MAX_STR_LEN)),
             RTI_FALSE);
         if (sample->_u.str == NULL) {
             return RTI_FALSE;
@@ -869,7 +869,7 @@ RTIBool Value_initialize_w_params(
             RTICdrType_copyStringEx(
                 &sample->_u.str,
                 "",
-                (255),
+                ((MAX_STR_LEN)),
                 RTI_FALSE);
             if (sample->_u.str == NULL) {
                 return RTI_FALSE;
@@ -1030,7 +1030,7 @@ RTIBool Value_copy(
             {
                 if (!RTICdrType_copyStringEx (
                     &dst->_u.str, src->_u.str, 
-                    (255) + 1, RTI_FALSE)){
+                    ((MAX_STR_LEN)) + 1, RTI_FALSE)){
                     return RTI_FALSE;
             }
         } break ;

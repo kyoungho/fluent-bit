@@ -198,7 +198,7 @@ static void cb_dds_flush(const void *data, size_t bytes,
 					break;
 				case MSGPACK_OBJECT_STR:
 					record->value._d = STR;
-					strcpy(record->value._u.str, value.via.str.ptr);
+					strncpy(record->value._u.str, value.via.str.ptr, value.via.str.size);
 					break;
 				case MSGPACK_OBJECT_FLOAT32:
 					break;
@@ -230,6 +230,8 @@ static int cb_dds_exit(void *data, struct flb_config *config) {
 	struct flb_out_dds_config *ctx = data;
 	
 	dds_shutdown(ctx->participant);
+
+
 	return 0;
 }
 

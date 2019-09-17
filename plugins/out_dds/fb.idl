@@ -1,4 +1,5 @@
 const long MAX_RECORDS = 128;
+const long MAX_STR_LEN = 1024;
 
 enum ValueKind {
 	NIL,
@@ -27,7 +28,7 @@ union Value switch (ValueKind) {
 	case FLOAT64:
 		double f64;
 	case STR:
-		string str;
+		string<MAX_STR_LEN> str;
 };
 
 struct Record {
