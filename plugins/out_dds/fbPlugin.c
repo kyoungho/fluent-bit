@@ -998,9 +998,6 @@ RecordPluginSupport_print_data(
     ValuePluginSupport_print_data(
         (const Value*) &sample->value, "value", indent_level + 1);
 
-    ValueKindPluginSupport_print_data(
-        (const ValueKind*) &sample->kind, "kind", indent_level + 1);
-
 }
 
 /* ----------------------------------------------------------------------------

@@ -151,23 +151,81 @@ static void cb_dds_flush(const void *data, size_t bytes,
 		void *out_context,
 		struct flb_config *config) {
 
+	int i;
 	int ret;
 	size_t off = 0;
 	struct flb_out_dds_config *ctx = out_context;
 	struct flb_time tms;
 	msgpack_object *obj;
 	msgpack_unpacked result;
+	msgpack_object key;
+	msgpack_object value;
+	Record *record;
 
 	msgpack_unpacked_init(&result);
-
 
 	while(msgpack_unpack_next(&result, data, bytes, &off) == MSGPACK_UNPACK_SUCCESS) {
 		flb_time_pop_from_msgpack(&tms, &result, &obj);
 
 		flb_info("tag: %s", tag);
-		flb_info("%"PRIu32".%09lu", (uint32_t)tms.tm.tv_sec, tms.tm.tv_nsec);
+		flb_info("timestamp: %f", flb_time_to_double(&tms));
+		
+		strcpy(ctx->instance->tag, tag);
+		ctx->instance->ts = flb_time_to_double(&tms);
+		RecordSeq_set_length(&ctx->instance->records, obj->via.map.size);
+		flb_info("sequence lenth: %d", RecordSeq_get_length(&ctx->instance->records));
+		flb_info("sequence maximum: %d", RecordSeq_get_maximum(&ctx->instance->records));
+
+		for (i = 0; i < obj->via.map.size; i++) {
+			record = RecordSeq_get_reference(&ctx->instance->records, i);
+			key = obj->via.map.ptr[i].key;
+			value = obj->via.map.ptr[i].val;
+
+			strncpy(record->key, key.via.str.ptr, key.via.str.size);
+			flb_info("key: %s", key.via.str.ptr);
+
+			switch(value.type) {
+				case MSGPACK_OBJECT_NIL:
+					break;
+				case MSGPACK_OBJECT_BOOLEAN:
+					break;
+				case MSGPACK_OBJECT_POSITIVE_INTEGER:
+					flb_info("value: %d", value.via.u64);
+					record->value._d = POSITIVE_INTEGER;
+					record->value._u.u64 = value.via.u64;
+					break;
+				case MSGPACK_OBJECT_NEGATIVE_INTEGER:
+					flb_info("value: %d", value.via.i64);
+					record->value._d = NEGATIVE_INTEGER;
+					record->value._u.u64 = value.via.i64;
+					break;
+				case MSGPACK_OBJECT_FLOAT64:
+					flb_info("value: %f", value.via.f64);
+					record->value._d = FLOAT64;
+					record->value._u.f64 = value.via.f64;
+					break;
+				case MSGPACK_OBJECT_STR:
+					flb_info("value: %s", value.via.str.ptr);
+					record->value._d = STR;
+					strcpy(record->value._u.str, value.via.str.ptr);
+					break;
+				case MSGPACK_OBJECT_FLOAT32:
+					break;
+				case MSGPACK_OBJECT_BIN:
+					break;
+				case MSGPACK_OBJECT_EXT:
+					break;
+				case MSGPACK_OBJECT_ARRAY:
+					break;
+				case MSGPACK_OBJECT_MAP:
+					break;
+				default:
+					flb_warn("[%s] unknown msgpack type %i", __FUNCTION__, value.type);
+			}
+		}
 
 		FBDataWriter_write(ctx->fb_writer, ctx->instance, &(ctx->instance_handle));
+		RecordSeq_set_length(&ctx->instance->records, 0);
 
 		//ret = produce_message(&tms, obj, ctx, config);
 		/*

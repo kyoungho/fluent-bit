@@ -21,7 +21,7 @@ struct flb_out_dds_config {
 	FBDataWriter *fb_writer;
 	const char *type_name;
 	FB *instance;
-	DDS_InstanceHandle_t instance_handle
+	DDS_InstanceHandle_t instance_handle;
 };
 
 #endif

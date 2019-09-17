@@ -33,7 +33,6 @@ union Value switch (ValueKind) {
 struct Record {
     string key;
     Value value;
-    ValueKind kind;
 };
 
 struct FB {

@@ -1086,7 +1086,7 @@ DDS_TypeCode* Record_get_typecode()
 
     static DDS_TypeCode Record_g_tc_key_string = DDS_INITIALIZE_STRING_TYPECODE((255));
 
-    static DDS_TypeCode_Member Record_g_tc_members[3]=
+    static DDS_TypeCode_Member Record_g_tc_members[2]=
     {
 
         {
@@ -1124,24 +1124,6 @@ DDS_TypeCode* Record_get_typecode()
             1,
             NULL, /* Ignored */
             RTICdrTypeCodeAnnotations_INITIALIZER
-        }, 
-        {
-            (char *)"kind",/* Member name */
-            {
-                2,/* Representation ID */
-                DDS_BOOLEAN_FALSE,/* Is a pointer? */
-                -1, /* Bitfield bits */
-                NULL/* Member type code is assigned later */
-            },
-            0, /* Ignored */
-            0, /* Ignored */
-            0, /* Ignored */
-            NULL, /* Ignored */
-            RTI_CDR_REQUIRED_MEMBER, /* Is a key? */
-            DDS_PUBLIC_MEMBER,/* Member visibility */
-            1,
-            NULL, /* Ignored */
-            RTICdrTypeCodeAnnotations_INITIALIZER
         }
     };
 
@@ -1155,7 +1137,7 @@ DDS_TypeCode* Record_get_typecode()
             0, /* Ignored */
             0, /* Ignored */
             NULL, /* Ignored */
-            3, /* Number of members */
+            2, /* Number of members */
             Record_g_tc_members, /* Members */
             DDS_VM_NONE, /* Ignored */
             RTICdrTypeCodeAnnotations_INITIALIZER,
@@ -1172,14 +1154,10 @@ DDS_TypeCode* Record_get_typecode()
 
     Record_g_tc_members[0]._representation._typeCode = (RTICdrTypeCode *)&Record_g_tc_key_string;
     Record_g_tc_members[1]._representation._typeCode = (RTICdrTypeCode *)Value_get_typecode();
-    Record_g_tc_members[2]._representation._typeCode = (RTICdrTypeCode *)ValueKind_get_typecode();
 
     /* Initialize the values for member annotations. */
     Record_g_tc_members[0]._annotations._defaultValue._d = RTI_XCDR_TK_STRING;
     Record_g_tc_members[0]._annotations._defaultValue._u.string_value = (DDS_Char *) "";
-
-    Record_g_tc_members[2]._annotations._defaultValue._d = RTI_XCDR_TK_ENUM;
-    Record_g_tc_members[2]._annotations._defaultValue._u.enumerated_value = 0;
 
     Record_g_tc._data._sampleAccessInfo =
     Record_get_sample_access_info();
@@ -1195,7 +1173,7 @@ RTIXCdrSampleAccessInfo *Record_get_sample_access_info()
 {
     static RTIBool is_initialized = RTI_FALSE;
 
-    static RTIXCdrMemberAccessInfo Record_g_memberAccessInfos[3] =
+    static RTIXCdrMemberAccessInfo Record_g_memberAccessInfos[2] =
     {RTIXCdrMemberAccessInfo_INITIALIZER};
 
     static RTIXCdrSampleAccessInfo Record_g_sampleAccessInfo = 
@@ -1210,9 +1188,6 @@ RTIXCdrSampleAccessInfo *Record_get_sample_access_info()
 
     Record_g_memberAccessInfos[1].bindingMemberValueOffset[0] = 
     (RTIXCdrUnsignedLong) RTIXCdrUtility_pointerToULongLong(&((Record *)NULL)->value);
-
-    Record_g_memberAccessInfos[2].bindingMemberValueOffset[0] = 
-    (RTIXCdrUnsignedLong) RTIXCdrUtility_pointerToULongLong(&((Record *)NULL)->kind);
 
     Record_g_sampleAccessInfo.memberAccessInfos = 
     Record_g_memberAccessInfos;
@@ -1320,7 +1295,6 @@ RTIBool Record_initialize_w_params(
     allocParams)) {
         return RTI_FALSE;
     }
-    sample->kind = NIL;
     return RTI_TRUE;
 }
 
@@ -1374,8 +1348,6 @@ void Record_finalize_w_params(
     }
     Value_finalize_w_params(&sample->value,deallocParams);
 
-    ValueKind_finalize_w_params(&sample->kind,deallocParams);
-
 }
 
 void Record_finalize_optional_members(
@@ -1395,7 +1367,6 @@ void Record_finalize_optional_members(
     deallocParamsTmp.delete_optional_members = DDS_BOOLEAN_TRUE;
 
     Value_finalize_optional_members(&sample->value, deallocParams->delete_pointers);
-    ValueKind_finalize_optional_members(&sample->kind, deallocParams->delete_pointers);
 }
 
 RTIBool Record_copy(
@@ -1414,10 +1385,6 @@ RTIBool Record_copy(
     }
     if (!Value_copy(
         &dst->value,(const Value*)&src->value)) {
-        return RTI_FALSE;
-    } 
-    if (!ValueKind_copy(
-        &dst->kind,(const ValueKind*)&src->kind)) {
         return RTI_FALSE;
     } 
 

@@ -9,8 +9,8 @@ For more information, type 'rtiddsgen -help' at a command shell
 or consult the RTI Connext manual.
 */
 
-#ifndef fb_1282814908_h
-#define fb_1282814908_h
+#ifndef fb_1282814888_h
+#define fb_1282814888_h
 
 #ifndef NDDS_STANDALONE_TYPE
 #ifndef ndds_c_h
@@ -184,7 +184,6 @@ typedef struct Record {
 
     DDS_Char *   key ;
     Value   value ;
-    ValueKind   kind ;
 
 } Record ;
 #if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
