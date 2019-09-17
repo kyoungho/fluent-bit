@@ -9,8 +9,8 @@ For more information, type 'rtiddsgen -help' at a command shell
 or consult the RTI Connext manual.
 */
 
-#ifndef fb_1282814911_h
-#define fb_1282814911_h
+#ifndef fb_1282814908_h
+#define fb_1282814908_h
 
 #ifndef NDDS_STANDALONE_TYPE
 #ifndef ndds_c_h
@@ -252,7 +252,7 @@ extern const char *FBTYPENAME;
 
 typedef struct FB {
 
-    DDS_LongLong   ts ;
+    DDS_Double   ts ;
     DDS_Char *   tag ;
     struct    RecordSeq  records ;
 

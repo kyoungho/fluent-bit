@@ -8,8 +8,8 @@ For more information, type 'rtiddsgen -help' at a command shell
 or consult the RTI Connext manual.
 */
 
-#ifndef fbSupport_1282814911_h
-#define fbSupport_1282814911_h
+#ifndef fbSupport_1282814908_h
+#define fbSupport_1282814908_h
 
 /* Uses */
 #include "fb.h"
@@ -107,5 +107,5 @@ DDS_DATAREADER_C(FBDataReader, FBSeq, FB);
 #define NDDSUSERDllExport
 #endif
 
-#endif  /* fbSupport_1282814911_h */
+#endif  /* fbSupport_1282814908_h */
 

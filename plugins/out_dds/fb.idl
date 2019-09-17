@@ -37,7 +37,7 @@ struct Record {
 };
 
 struct FB {
-    long long ts;
+    double ts;
     string tag;//@key
     sequence<Record, MAX_RECORDS> records;
 };

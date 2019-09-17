@@ -1711,7 +1711,7 @@ FBPluginSupport_print_data(
         return;
     }
 
-    RTICdrType_printLongLong(
+    RTICdrType_printDouble(
         &sample->ts, "ts", indent_level + 1);    
 
     if (sample->tag==NULL) {

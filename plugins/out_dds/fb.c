@@ -1551,17 +1551,17 @@ DDS_TypeCode* FB_get_typecode()
 
     FB_g_tc_records_sequence._data._typeCode = (RTICdrTypeCode *)Record_get_typecode();
     FB_g_tc_records_sequence._data._sampleAccessInfo = &DDS_g_sai_seq;
-    FB_g_tc_members[0]._representation._typeCode = (RTICdrTypeCode *)&DDS_g_tc_longlong;
+    FB_g_tc_members[0]._representation._typeCode = (RTICdrTypeCode *)&DDS_g_tc_double;
     FB_g_tc_members[1]._representation._typeCode = (RTICdrTypeCode *)&FB_g_tc_tag_string;
     FB_g_tc_members[2]._representation._typeCode = (RTICdrTypeCode *)& FB_g_tc_records_sequence;
 
     /* Initialize the values for member annotations. */
-    FB_g_tc_members[0]._annotations._defaultValue._d = RTI_XCDR_TK_LONGLONG;
-    FB_g_tc_members[0]._annotations._defaultValue._u.long_long_value = 0ll;
-    FB_g_tc_members[0]._annotations._minValue._d = RTI_XCDR_TK_LONGLONG;
-    FB_g_tc_members[0]._annotations._minValue._u.long_long_value = RTIXCdrLongLong_MIN;
-    FB_g_tc_members[0]._annotations._maxValue._d = RTI_XCDR_TK_LONGLONG;
-    FB_g_tc_members[0]._annotations._maxValue._u.long_long_value = RTIXCdrLongLong_MAX;
+    FB_g_tc_members[0]._annotations._defaultValue._d = RTI_XCDR_TK_DOUBLE;
+    FB_g_tc_members[0]._annotations._defaultValue._u.double_value = 0.0;
+    FB_g_tc_members[0]._annotations._minValue._d = RTI_XCDR_TK_DOUBLE;
+    FB_g_tc_members[0]._annotations._minValue._u.double_value = RTIXCdrDouble_MIN;
+    FB_g_tc_members[0]._annotations._maxValue._d = RTI_XCDR_TK_DOUBLE;
+    FB_g_tc_members[0]._annotations._maxValue._u.double_value = RTIXCdrDouble_MAX;
 
     FB_g_tc_members[1]._annotations._defaultValue._d = RTI_XCDR_TK_STRING;
     FB_g_tc_members[1]._annotations._defaultValue._u.string_value = (DDS_Char *) "";
@@ -1681,7 +1681,7 @@ RTIBool FB_initialize_w_params(
         return RTI_FALSE;
     }
 
-    sample->ts = 0ll;
+    sample->ts = 0.0;
 
     if (allocParams->allocate_memory) {
         sample->tag = DDS_String_alloc((255));
@@ -1824,7 +1824,7 @@ RTIBool FB_copy(
         return RTI_FALSE;
     }
 
-    if (!RTICdrType_copyLongLong (
+    if (!RTICdrType_copyDouble (
         &dst->ts, &src->ts)) { 
         return RTI_FALSE;
     }
