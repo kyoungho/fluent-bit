@@ -8,8 +8,8 @@ For more information, type 'rtiddsgen -help' at a command shell
 or consult the RTI Connext manual.
 */
 
-#ifndef fbSupport_1282814522_h
-#define fbSupport_1282814522_h
+#ifndef fbSupport_1282814911_h
+#define fbSupport_1282814911_h
 
 /* Uses */
 #include "fb.h"
@@ -22,6 +22,34 @@ or consult the RTI Connext manual.
 
 #endif
 
+/* ========================================================================= */
+/**
+Uses:     T
+
+Defines:  TTypeSupport, TDataWriter, TDataReader
+
+Organized using the well-documented "Generics Pattern" for
+implementing generics in C and C++.
+*/
+
+#if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
+/* If the code is building on Windows, start exporting symbols.
+*/
+#undef NDDSUSERDllExport
+#define NDDSUSERDllExport __declspec(dllexport)
+
+#endif
+
+DDS_TYPESUPPORT_C(ValueTypeSupport, Value);
+DDS_DATAWRITER_WITH_DATA_CONSTRUCTOR_METHODS_C(ValueDataWriter, Value);
+DDS_DATAREADER_C(ValueDataReader, ValueSeq, Value);
+
+#if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
+/* If the code is building on Windows, stop exporting symbols.
+*/
+#undef NDDSUSERDllExport
+#define NDDSUSERDllExport
+#endif
 /* ========================================================================= */
 /**
 Uses:     T
@@ -79,5 +107,5 @@ DDS_DATAREADER_C(FBDataReader, FBSeq, FB);
 #define NDDSUSERDllExport
 #endif
 
-#endif  /* fbSupport_1282814522_h */
+#endif  /* fbSupport_1282814911_h */
 

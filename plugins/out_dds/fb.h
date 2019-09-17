@@ -9,8 +9,8 @@ For more information, type 'rtiddsgen -help' at a command shell
 or consult the RTI Connext manual.
 */
 
-#ifndef fb_1282814522_h
-#define fb_1282814522_h
+#ifndef fb_1282814911_h
+#define fb_1282814911_h
 
 #ifndef NDDS_STANDALONE_TYPE
 #ifndef ndds_c_h
@@ -21,13 +21,170 @@ or consult the RTI Connext manual.
 #endif
 
 #define MAX_RECORDS (128)
+typedef enum ValueKind
+{
+    NIL ,      
+    BOOLEAN ,      
+    POSITIVE_INTEGER ,      
+    NEGATIVE_INTEGER ,      
+    FLOAT32 ,      
+    FLOAT64 ,      
+    FLOAT ,      
+    STR ,      
+    ARRAY ,      
+    MAP ,      
+    BIN ,      
+    EXT      
+} ValueKind;
+#if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
+/* If the code is building on Windows, start exporting symbols.
+*/
+#undef NDDSUSERDllExport
+#define NDDSUSERDllExport __declspec(dllexport)
+#endif
+
+#ifndef NDDS_STANDALONE_TYPE
+NDDSUSERDllExport DDS_TypeCode* ValueKind_get_typecode(void); /* Type code */
+NDDSUSERDllExport RTIXCdrTypePlugin *ValueKind_get_type_plugin_info(void);
+NDDSUSERDllExport RTIXCdrSampleAccessInfo *ValueKind_get_sample_access_info(void);
+#endif
+
+DDS_SEQUENCE(ValueKindSeq, ValueKind);
+
+NDDSUSERDllExport
+RTIBool ValueKind_initialize(
+    ValueKind* self);
+
+NDDSUSERDllExport
+RTIBool ValueKind_initialize_ex(
+    ValueKind* self,RTIBool allocatePointers,RTIBool allocateMemory);
+
+NDDSUSERDllExport
+RTIBool ValueKind_initialize_w_params(
+    ValueKind* self,
+    const struct DDS_TypeAllocationParams_t * allocParams);  
+
+NDDSUSERDllExport
+RTIBool ValueKind_finalize_w_return(
+    ValueKind* self);
+
+NDDSUSERDllExport
+void ValueKind_finalize(
+    ValueKind* self);
+
+NDDSUSERDllExport
+void ValueKind_finalize_ex(
+    ValueKind* self,RTIBool deletePointers);
+
+NDDSUSERDllExport
+void ValueKind_finalize_w_params(
+    ValueKind* self,
+    const struct DDS_TypeDeallocationParams_t * deallocParams);
+
+NDDSUSERDllExport
+void ValueKind_finalize_optional_members(
+    ValueKind* self, RTIBool deletePointers);  
+
+NDDSUSERDllExport
+RTIBool ValueKind_copy(
+    ValueKind* dst,
+    const ValueKind* src);
+
+#if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
+/* If the code is building on Windows, stop exporting symbols.
+*/
+#undef NDDSUSERDllExport
+#define NDDSUSERDllExport
+#endif
+
+extern const char *ValueTYPENAME;
+
+typedef struct Value {
+
+    ValueKind _d;
+    struct Value_u 
+    {
+
+        DDS_Boolean   b ;
+        DDS_UnsignedLongLong   u64 ;
+        DDS_LongLong   i64 ;
+        DDS_Float   f32 ;
+        DDS_Double   f64 ;
+        DDS_Char *   str ;
+    }_u;
+
+} Value ;
+#if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
+/* If the code is building on Windows, start exporting symbols.
+*/
+#undef NDDSUSERDllExport
+#define NDDSUSERDllExport __declspec(dllexport)
+#endif
+
+#ifndef NDDS_STANDALONE_TYPE
+NDDSUSERDllExport DDS_TypeCode* Value_get_typecode(void); /* Type code */
+NDDSUSERDllExport RTIXCdrTypePlugin *Value_get_type_plugin_info(void);
+NDDSUSERDllExport RTIXCdrSampleAccessInfo *Value_get_sample_access_info(void);
+#endif
+
+DDS_SEQUENCE(ValueSeq, Value);
+
+NDDSUSERDllExport
+RTIBool Value_initialize(
+    Value* self);
+
+NDDSUSERDllExport
+RTIBool Value_initialize_ex(
+    Value* self,RTIBool allocatePointers,RTIBool allocateMemory);
+
+NDDSUSERDllExport
+RTIBool Value_initialize_w_params(
+    Value* self,
+    const struct DDS_TypeAllocationParams_t * allocParams);  
+
+NDDSUSERDllExport
+RTIBool Value_finalize_w_return(
+    Value* self);
+
+NDDSUSERDllExport
+void Value_finalize(
+    Value* self);
+
+NDDSUSERDllExport
+void Value_finalize_ex(
+    Value* self,RTIBool deletePointers);
+
+NDDSUSERDllExport
+void Value_finalize_w_params(
+    Value* self,
+    const struct DDS_TypeDeallocationParams_t * deallocParams);
+
+NDDSUSERDllExport
+void Value_finalize_optional_members(
+    Value* self, RTIBool deletePointers);  
+
+NDDSUSERDllExport
+RTIBool Value_copy(
+    Value* dst,
+    const Value* src);
+
+NDDSUSERDllExport
+DDS_LongLong Value_getDefaultDiscriminator();
+
+#if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
+/* If the code is building on Windows, stop exporting symbols.
+*/
+#undef NDDSUSERDllExport
+#define NDDSUSERDllExport
+#endif
 
 extern const char *RecordTYPENAME;
 
 typedef struct Record {
 
     DDS_Char *   key ;
-    DDS_Double   value ;
+    Value   value ;
+    ValueKind   kind ;
 
 } Record ;
 #if (defined(RTI_WIN32) || defined (RTI_WINCE) || defined(RTI_INTIME)) && defined(NDDS_USER_DLL_EXPORT)
