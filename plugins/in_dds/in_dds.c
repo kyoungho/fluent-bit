@@ -46,6 +46,9 @@ void cb_on_data_available(void* listener_data, DDS_DataReader* reader)
 	FB *fb_data;
 	int record_len;
 	Record *record;
+	
+	msgpack_sbuffer_init(&mp_sbuf);
+	msgpack_packer_init(&mp_pck, &mp_sbuf, msgpack_sbuffer_write);
 
 	fb_reader = FBDataReader_narrow(reader);
 	if (fb_reader == NULL) {
@@ -66,9 +69,6 @@ void cb_on_data_available(void* listener_data, DDS_DataReader* reader)
 	for (i = 0; i < FBSeq_get_length(&data_seq); ++i) {
 		if (DDS_SampleInfoSeq_get_reference(&info_seq, i)->valid_data) {
 			flb_info("Received data\n");
-
-			msgpack_sbuffer_init(&mp_sbuf);
-			msgpack_packer_init(&mp_pck, &mp_sbuf, msgpack_sbuffer_write);
 
 			fb_data = FBSeq_get_reference(&data_seq, i);
 
@@ -102,7 +102,8 @@ void cb_on_data_available(void* listener_data, DDS_DataReader* reader)
 			}
 
 			flb_input_chunk_append_raw(ctx->i_ins, NULL, 0, mp_sbuf.data, mp_sbuf.size);
-			msgpack_sbuffer_destroy(&mp_sbuf);
+			msgpack_sbuffer_clear(&mp_sbuf);
+
 		}
 	}
 	retcode = FBDataReader_return_loan(
@@ -111,6 +112,7 @@ void cb_on_data_available(void* listener_data, DDS_DataReader* reader)
 	if (retcode != DDS_RETCODE_OK) {
 		flb_error ("[in_dds]return loan error %d\n", retcode);
 	}
+	msgpack_sbuffer_destroy(&mp_sbuf);
 }
 
 static int cb_dds_init(struct flb_input_instance *ins,
