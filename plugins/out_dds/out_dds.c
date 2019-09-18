@@ -1,4 +1,4 @@
-#include "dds.h"
+#include "out_dds.h"
 
 static int dds_shutdown(DDS_DomainParticipant *participant)
 {
@@ -36,8 +36,8 @@ static int cb_dds_init(struct flb_output_instance *ins,
 		struct flb_config *config,
 		void *data)
 {   
-	const char *tmp;
 	struct flb_out_dds_config *ctx;
+	const char *tmp = NULL;
 	DDS_ReturnCode_t retcode;
 
 	ctx = flb_calloc(1, sizeof(struct flb_out_dds_config));
@@ -55,7 +55,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 		ctx->domain_id = 0;
 	}
 
-	/* To customize participant QoS, use 
+	/* To customize participant QoS, use
 	   the configuration file USER_QOS_PROFILES.xml */
 	ctx->participant = DDS_DomainParticipantFactory_create_participant(
 			DDS_TheParticipantFactory, ctx->domain_id, &DDS_PARTICIPANT_QOS_DEFAULT,
@@ -102,6 +102,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 		flb_errno();
 		return -1;
 	}
+
 	/* To customize data writer QoS, use
 	   DDS_Publisher_get_default_datawriter_qos() instead */
 	ctx->writer = DDS_Publisher_create_datawriter(
@@ -113,6 +114,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 		flb_errno();
 		return -1;
 	}
+
 	ctx->fb_writer = FBDataWriter_narrow(ctx->writer);
 	if (ctx->fb_writer == NULL) {
 		flb_error("[out_dds] DataWriter narrow error\n");
@@ -228,7 +230,7 @@ static void cb_dds_flush(const void *data, size_t bytes,
 
 static int cb_dds_exit(void *data, struct flb_config *config) {
 	struct flb_out_dds_config *ctx = data;
-	
+
 	dds_shutdown(ctx->participant);
 
 

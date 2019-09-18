@@ -1,5 +1,5 @@
-#ifndef FLB_OUT_DDS
-#define FLB_OUT_DDS
+#ifndef FLB_OUT_DDS_H
+#define FLB_OUT_DDS_H
 
 #include <fluent-bit/flb_info.h>
 #include <fluent-bit/flb_output.h>

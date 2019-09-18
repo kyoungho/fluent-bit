@@ -83,7 +83,7 @@ include_directories(${Connext_INCLUDE_DIRS})
 add_definitions(${Connext_DEFINITIONS})
 
 set(src
-  dds.c
+  out_dds.c
   fb.c
   fbPlugin.c
   fbSupport.c)
