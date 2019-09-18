@@ -128,6 +128,7 @@ endif()
 
 REGISTER_IN_PLUGIN("in_tcp")
 REGISTER_IN_PLUGIN("in_mqtt")
+REGISTER_IN_PLUGIN("in_dds")
 REGISTER_IN_PLUGIN("in_lib")
 REGISTER_IN_PLUGIN("in_forward")
 REGISTER_IN_PLUGIN("in_random")
