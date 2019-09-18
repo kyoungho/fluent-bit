@@ -230,9 +230,16 @@ static void cb_dds_flush(const void *data, size_t bytes,
 
 static int cb_dds_exit(void *data, struct flb_config *config) {
 	struct flb_out_dds_config *ctx = data;
+	if (!ctx) {
+		return 0;
+	}
 
-	dds_shutdown(ctx->participant);
+	if (ctx->participant) {
+		dds_shutdown(ctx->participant);
 
+	}
+
+	flb_free(ctx);
 
 	return 0;
 }

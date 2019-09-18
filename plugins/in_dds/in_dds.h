@@ -3,7 +3,7 @@
 
 #include <fluent-bit/flb_info.h>
 #include <fluent-bit/flb_input.h>
-#include <fluent-bit/flb_utils.h>
+#include <fluent-bit/flb_pack.h>
 
 #include "ndds/ndds_c.h"
 #include "fb.h"
@@ -19,6 +19,7 @@ struct flb_in_dds_config {
 	DDS_DataReader *reader;
 	FBDataReader *fb_reader;
 	const char *type_name;
+	struct flb_input_instance *i_ins;
 };
 
 #endif

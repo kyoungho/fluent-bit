@@ -35,11 +35,17 @@ static int dds_shutdown(DDS_DomainParticipant *participant)
 struct DDS_DataReaderListener reader_listener = DDS_DataReaderListener_INITIALIZER;
 void cb_on_data_available(void* listener_data, DDS_DataReader* reader)
 {
+	struct flb_in_dds_config *ctx = listener_data;
 	FBDataReader *fb_reader = NULL;
 	struct FBSeq data_seq = DDS_SEQUENCE_INITIALIZER;
 	struct DDS_SampleInfoSeq info_seq = DDS_SEQUENCE_INITIALIZER;
 	DDS_ReturnCode_t retcode;
-	int i;
+	int i, j;
+	msgpack_packer mp_pck;
+	msgpack_sbuffer mp_sbuf;
+	FB *fb_data;
+	int record_len;
+	Record *record;
 
 	fb_reader = FBDataReader_narrow(reader);
 	if (fb_reader == NULL) {
@@ -60,8 +66,43 @@ void cb_on_data_available(void* listener_data, DDS_DataReader* reader)
 	for (i = 0; i < FBSeq_get_length(&data_seq); ++i) {
 		if (DDS_SampleInfoSeq_get_reference(&info_seq, i)->valid_data) {
 			flb_info("Received data\n");
-			FBTypeSupport_print_data(
-					FBSeq_get_reference(&data_seq, i));
+
+			msgpack_sbuffer_init(&mp_sbuf);
+			msgpack_packer_init(&mp_pck, &mp_sbuf, msgpack_sbuffer_write);
+
+			fb_data = FBSeq_get_reference(&data_seq, i);
+
+			msgpack_pack_array(&mp_pck, 2);
+			msgpack_pack_double(&mp_pck, fb_data->ts);
+			record_len = RecordSeq_get_length(&fb_data->records);
+			msgpack_pack_map(&mp_pck, record_len);
+
+			for (j = 0; j < record_len; j++) {
+				record = RecordSeq_get_reference(&fb_data->records, j);
+				msgpack_pack_str(&mp_pck, strlen(record->key));
+				msgpack_pack_str_body(&mp_pck, record->key, strlen(record->key));
+				switch(record->value._d) {
+					case POSITIVE_INTEGER:
+						msgpack_pack_uint64(&mp_pck, record->value._u.u64);
+						break;
+					case NEGATIVE_INTEGER:
+						msgpack_pack_int64(&mp_pck, record->value._u.i64);
+						break;
+					case FLOAT64:
+						msgpack_pack_double(&mp_pck, record->value._u.f64);
+						break;
+					case STR:
+						msgpack_pack_str(&mp_pck, strlen(record->value._u.str));
+						msgpack_pack_str_body(&mp_pck, record->value._u.str, strlen(record->value._u.str));
+						break;
+					default:
+						flb_warn("[%s] unknown value type %d", __FUNCTION__, record->value._d);
+				}
+
+			}
+
+			flb_input_chunk_append_raw(ctx->i_ins, NULL, 0, mp_sbuf.data, mp_sbuf.size);
+			msgpack_sbuffer_destroy(&mp_sbuf);
 		}
 	}
 	retcode = FBDataReader_return_loan(
@@ -84,6 +125,8 @@ static int cb_dds_init(struct flb_input_instance *ins,
 		flb_errno();
 		return -1;
 	}
+
+	ctx->i_ins = ins;
 
 	// Setting Domain ID
 	tmp = flb_input_get_property("domain_id", ins);
@@ -150,6 +193,7 @@ static int cb_dds_init(struct flb_input_instance *ins,
 	reader_listener.on_sample_lost = NULL;
 	reader_listener.on_subscription_matched = NULL;
 	reader_listener.on_data_available = cb_on_data_available;
+	reader_listener.as_listener.listener_data = ctx;
 
 	/* To customize data reader QoS, use
 	   the configuration file USER_QOS_PROFILES.xml */
@@ -172,7 +216,16 @@ static int cb_dds_exit(void *data, struct flb_config *config)
 	(void) *config;
 	struct flb_in_dds_config *ctx = data;
 
-	dds_shutdown(ctx->participant);
+	if (!ctx) {
+		return 0;
+	}
+
+	if (ctx->participant) {
+		dds_shutdown(ctx->participant);
+
+	}
+
+	flb_free(ctx);
 
 	return 0;
 }
@@ -186,5 +239,3 @@ struct flb_input_plugin in_dds_plugin = {
 	.cb_flush_buf = NULL,
 	.cb_exit      = cb_dds_exit
 };
-
-
