@@ -68,7 +68,7 @@ void cb_on_data_available(void* listener_data, DDS_DataReader* reader)
 	}
 	for (i = 0; i < FBSeq_get_length(&data_seq); ++i) {
 		if (DDS_SampleInfoSeq_get_reference(&info_seq, i)->valid_data) {
-			flb_info("Received data\n");
+			//flb_info("Received data\n");
 
 			fb_data = FBSeq_get_reference(&data_seq, i);
 
