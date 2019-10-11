@@ -187,7 +187,6 @@ struct flb_record_accessor *flb_ra_create(char *str)
     if (!ra) {
         flb_errno();
         flb_error("[record accessor] cannot create context");
-        flb_env_destroy(env);
         flb_sds_destroy(buf);
         return NULL;
     }
@@ -294,7 +293,7 @@ flb_sds_t flb_ra_translate(struct flb_record_accessor *ra,
                            msgpack_object map)
 {
     int found;
-    flb_sds_t tmp;
+    flb_sds_t tmp = NULL;
     flb_sds_t buf;
     struct mk_list *head;
     struct flb_ra_parser *rp;
@@ -323,6 +322,7 @@ flb_sds_t flb_ra_translate(struct flb_record_accessor *ra,
             return NULL;
         }
         if (tmp != buf) {
+            flb_sds_destroy(buf);
             buf = tmp;
         }
     }

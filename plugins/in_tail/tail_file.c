@@ -578,6 +578,7 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
 {
     int fd;
     int ret;
+    int len;
     off_t offset;
     char *tag;
     size_t tag_len;
@@ -640,6 +641,18 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
         goto error;
     }
 
+#if defined(__APPLE__)
+    char *name = flb_tail_file_name(file);
+    if (name == NULL) {
+        goto error;
+    }
+    if (flb_tail_file_exists(name, ctx)) {
+        flb_free(name);
+        goto error;
+    }
+    flb_free(name);
+#endif
+
 #ifdef _MSC_VER
     if (get_inode(fd, &file->inode)) {
         goto error;
@@ -681,10 +694,11 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
 
     /* Initialize (optional) dynamic tag */
     if (ctx->dynamic_tag == FLB_TRUE) {
-        tag = flb_malloc(strlen(ctx->i_ins->tag) + strlen(path));
+        len = ctx->i_ins->tag_len + strlen(path) + 1;
+        tag = flb_malloc(len);
         if (!tag) {
-            flb_error("[in_tail] failed to allocate tag buffer");
             flb_errno();
+            flb_error("[in_tail] failed to allocate tag buffer");
             goto error;
         }
 #ifdef FLB_HAVE_REGEX
@@ -754,13 +768,13 @@ int flb_tail_file_append(char *path, struct stat *st, int mode,
     return 0;
 
 error:
-    if (file->buf_data) {
-        flb_free(file->buf_data);
-    }
-    if (file->name) {
-        flb_free(file->name);
-    }
     if (file) {
+        if (file->buf_data) {
+            flb_free(file->buf_data);
+        }
+        if (file->name) {
+            flb_free(file->name);
+        }
         flb_free(file);
     }
     close(fd);

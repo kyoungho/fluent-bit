@@ -4,7 +4,7 @@ project(fluent-bit)
 # Fluent Bit Version
 set(FLB_VERSION_MAJOR  1)
 set(FLB_VERSION_MINOR  3)
-set(FLB_VERSION_PATCH  0)
+set(FLB_VERSION_PATCH  2)
 set(FLB_VERSION_STR "${FLB_VERSION_MAJOR}.${FLB_VERSION_MINOR}.${FLB_VERSION_PATCH}")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -97,6 +97,7 @@ option(FLB_PROXY_GO           "Enable Go plugins support"   Yes)
 option(FLB_IN_CPU             "Enable CPU input plugin"             Yes)
 option(FLB_IN_THERMAL         "Enable Thermal plugin"               Yes)
 option(FLB_IN_DISK            "Enable Disk input plugin"            Yes)
+option(FLB_IN_DOCKER          "Enable Docker input plugin"          Yes)
 option(FLB_IN_EXEC            "Enable Exec input plugin"            Yes)
 option(FLB_IN_FORWARD         "Enable Forward input plugin"         Yes)
 option(FLB_IN_HEALTH          "Enable Health input plugin"          Yes)
@@ -248,14 +249,6 @@ if(FLB_COVERAGE)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 --coverage -fprofile-arcs -ftest-coverage")
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
-
-if(FLB_OUT_GELF)
-  find_package( ZLIB )
-  if ( NOT ZLIB_FOUND )
-     set(FLB_OUT_GELF 0)
-  endif()
-endif()
-
 
 # Enable Debug symbols if specified
 if(FLB_DEBUG)
@@ -531,8 +524,8 @@ if(FLB_JEMALLOC AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
   # Link to Jemalloc as an external dependency
   ExternalProject_Add(jemalloc
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/jemalloc-5.1.0
-    CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lib/jemalloc-5.1.0/configure ${AUTOCONF_HOST_OPT} --with-lg-quantum=3 --enable-cc-silence --prefix=<INSTALL_DIR>
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/jemalloc-5.2.1
+    CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lib/jemalloc-5.2.1/configure ${AUTOCONF_HOST_OPT} --with-lg-quantum=3 --enable-cc-silence --prefix=<INSTALL_DIR>
     CFLAGS=-std=gnu99\ -Wall\ -pipe\ -g3\ -O3\ -funroll-loops
     BUILD_COMMAND $(MAKE)
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/
@@ -667,23 +660,42 @@ if(FLB_SYSTEM_WINDOWS)
   set(CPACK_GENERATOR "NSIS" "ZIP")
 endif()
 
+# Generic package information
 set(CPACK_PACKAGE_VERSION ${FLB_VERSION_STR})
 set(CPACK_PACKAGE_NAME "td-agent-bit")
 set(CPACK_PACKAGE_RELEASE 1)
 set(CPACK_PACKAGE_CONTACT "Eduardo Silva <eduardo@treasure-data.com>")
 set(CPACK_PACKAGE_VENDOR "Treasure Data")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/cpack/description")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Fast data collector for Linux")
 set(CPACK_PACKAGING_INSTALL_PREFIX "/opt/td-agent-bit")
 set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGING_INSTALL_PREFIX "/")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
 
+# Debian package setup and name sanitizer
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+find_program(DPKG_PROGRAM dpkg DOC "dpkg program of Debian-based systems")
+if(DPKG_PROGRAM)
+  execute_process(
+    COMMAND ${DPKG_PROGRAM} --print-architecture
+    OUTPUT_VARIABLE CPACK_DEBIAN_PACKAGE_ARCHITECTURE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+  #set(CPACK_PACKAGE_FILE_NAME
+  #  "${CPACK_PACKAGE_NAME_LOWERCASE}_${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
+
+  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
+
+  set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
+    ${CMAKE_CURRENT_SOURCE_DIR}/debian/conffiles
+    )
+endif()
 
 # RPM Generation information
 set(CPACK_RPM_PACKAGE_GROUP "System Environment/Daemons")
 set(CPACK_RPM_PACKAGE_LICENSE "Apache v2.0")
 set(CPACK_RPM_PACKAGE_RELEASE ${CPACK_PACKAGE_RELEASE})
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/cpack/description")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Fast data collector for Linux")
 set(CPACK_RPM_SPEC_MORE_DEFINE "%define ignore \#")
 set(CPACK_RPM_USER_FILELIST
   "%config(noreplace) /etc/${FLB_OUT_NAME}/${FLB_OUT_NAME}.conf"
@@ -699,9 +711,6 @@ set(CPACK_RPM_USER_FILELIST
   "%ignore /opt"
   "%ignore /etc")
 set(CPACK_RPM_PACKAGE_AUTOREQ ON)
-
-# CPack: DEB
-set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
 # CPack: Windows System
 if(CPACK_GENERATOR MATCHES "NSIS")

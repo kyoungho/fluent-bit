@@ -167,9 +167,13 @@ void flb_filter_do(struct flb_input_chunk *ic,
                 /* Point back the 'data' pointer to the new address */
                 ret = cio_chunk_get_content(ic->chunk,
                                             (char **) &work_data, &cur_size);
-
-                work_data += (cur_size - out_size);
-                work_size = out_size;
+                if (ret == -1) {
+                    flb_error("[filter] error retrieving data chunk");
+                }
+                else {
+                    work_data += (cur_size - out_size);
+                    work_size = out_size;
+                }
                 flb_free(out_buf);
             }
         }
@@ -211,7 +215,7 @@ int flb_filter_set_property(struct flb_filter_instance *filter,
          * map it directly to avoid an extra memory allocation.
          */
         kv = flb_kv_item_create(&filter->properties, (char *) k, NULL);
-        if (!k) {
+        if (!kv) {
             if (tmp) {
                 flb_sds_destroy(tmp);
             }
