@@ -1,0 +1,34 @@
+<dds>
+<qos_library name="RTILibrary">
+<qos_profile name="NewHighThroughput"
+base_name="BuiltinQosLibExp::Generic.StrictReliable.HighThroughput"
+is_default_qos="true">
+      <datareader_qos>
+	<durability>
+          <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+        </durability>
+        <resource_limits>
+            <initial_samples>10000</initial_samples>
+            <max_samples>10000</max_samples>
+        </resource_limits>
+    </datareader_qos>
+    <datawriter_qos>
+	<durability>
+          <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+        </durability>
+        <resource_limits>
+            <initial_samples>10000</initial_samples>
+            <max_samples>10000</max_samples>
+        </resource_limits>
+        <batch>
+            <enable>true</enable>
+            <max_data_bytes>16378</max_data_bytes>
+            <max_flush_delay>
+                <sec>DURATION_INFINITE_SEC</sec>
+                <nanosec>100000000</nanosec>
+            </max_flush_delay>
+        </batch>
+</datawriter_qos>
+</qos_profile>
+</qos_library>
+</dds>
