@@ -9,8 +9,15 @@
 #include "fb.h"
 #include "fbSupport.h"
 
+/* Default configuration values */
+#define DEFAULT_DOMAIN_ID 0
+#define DEFAULT_INTERVAL_SEC 0
+#define DEFAULT_INTERVAL_NSEC 1000000
+
 struct flb_in_dds_config {
-	int domain_id;
+	int domain_id;	/* DDS Domain ID */
+    int interval_sec;   /* interval collection time (Second) */
+    int interval_nsec;  /* interval collection time (Nanosecond) */
 
 	DDS_DomainParticipant *participant;
 	DDS_Subscriber *subscriber;
@@ -20,6 +27,7 @@ struct flb_in_dds_config {
 	FBDataReader *fb_reader;
 	const char *type_name;
 	struct flb_input_instance *i_ins;
+
 };
 
 #endif
