@@ -74,7 +74,14 @@ static int cb_dds_collect(struct flb_input_instance *ins,
             msgpack_pack_array(&mp_pck, 2);
             msgpack_pack_double(&mp_pck, fb_data->ts);
             record_len = RecordSeq_get_length(&fb_data->records);
-            msgpack_pack_map(&mp_pck, record_len);
+
+            msgpack_pack_map(&mp_pck, record_len+1);
+
+            msgpack_pack_str(&mp_pck, 6);
+            msgpack_pack_str_body(&mp_pck, "rec_ts", 6);
+            struct flb_time t;
+            flb_time_get(&t);
+            msgpack_pack_double(&mp_pck, flb_time_to_double(&t));
 
             for (j = 0; j < record_len; j++) {
                 record = RecordSeq_get_reference(&fb_data->records, j);
