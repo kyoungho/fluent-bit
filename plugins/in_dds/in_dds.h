@@ -27,7 +27,8 @@ struct flb_in_dds_config {
 	FBDataReader *fb_reader;
 	const char *type_name;
 	struct flb_input_instance *i_ins;
-
+	DDS_ContentFilteredTopic *cft;
+	struct DDS_StringSeq cft_parameters;
 };
 
 #endif

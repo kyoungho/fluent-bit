@@ -47,7 +47,7 @@ static int cb_dds_init(struct flb_output_instance *ins,
 	}
 
 	// Setting Domain ID
-	tmp = flb_output_get_property("domain_id", ins);
+	tmp = flb_output_get_property("Domain_ID", ins);
 	if (tmp != NULL && atoi(tmp) >= 0) {
 		ctx->domain_id = atoi(tmp);
 	}
@@ -172,6 +172,8 @@ static void cb_dds_flush(const void *data, size_t bytes,
 
 		strcpy(ctx->instance->tag, tag);
 		ctx->instance->ts = flb_time_to_double(&tms);
+
+		RecordSeq_initialize(&ctx->instance->records);
 		RecordSeq_set_length(&ctx->instance->records, obj->via.map.size);
 
 		for (i = 0; i < obj->via.map.size; i++) {
@@ -221,7 +223,8 @@ static void cb_dds_flush(const void *data, size_t bytes,
 		if (retcode != DDS_RETCODE_OK) {
 			flb_warn("[%s] writer error %d", __FUNCTION__, retcode);
 		}
-		RecordSeq_set_length(&ctx->instance->records, 0);
+		//RecordSeq_set_length(&ctx->instance->records, 0);
+
 	}
 
 	msgpack_unpacked_destroy(&result);

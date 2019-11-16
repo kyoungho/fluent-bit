@@ -127,6 +127,7 @@ static int cb_dds_init(struct flb_input_instance *ins,
 {
 	struct flb_in_dds_config *ctx;
 	const char *tmp = NULL;
+	const char *param_list[1];
 	DDS_ReturnCode_t retcode;
 	int ret;
 
@@ -139,7 +140,7 @@ static int cb_dds_init(struct flb_input_instance *ins,
 	ctx->i_ins = ins;
 
 	// Setting Domain ID
-	tmp = flb_input_get_property("domain_id", ins);
+	tmp = flb_input_get_property("Domain_ID", ins);
 	if (tmp != NULL && atoi(tmp) >= 0) {
 		ctx->domain_id = atoi(tmp);
 	}
@@ -148,19 +149,28 @@ static int cb_dds_init(struct flb_input_instance *ins,
 	}
 
 	// Setting interval
-	tmp = flb_input_get_property("interval_sec", ins);
+	tmp = flb_input_get_property("Interval_Sec", ins);
 	if (tmp != NULL && atoi(tmp) >= 0) {
         ctx->interval_sec = atoi(tmp);
     }
     else {
         ctx->interval_sec = DEFAULT_INTERVAL_SEC;
     }
-	tmp = flb_input_get_property("interval_nsec", ins);
+	tmp = flb_input_get_property("Interval_Nsec", ins);
 	if (tmp != NULL && atoi(tmp) >= 0) {
         ctx->interval_nsec = atoi(tmp);
     }
     else {
         ctx->interval_nsec = DEFAULT_INTERVAL_NSEC;
+    }
+
+	// Setting Tag filter
+    tmp = flb_input_get_property("Tag_Filter", ins);
+    if (tmp != NULL) {
+        param_list[0] = DDS_String_dup(tmp);
+    }
+    else {
+        param_list[0] = DDS_String_dup("*");
     }
 
 	/* To customize participant QoS, use
@@ -211,10 +221,27 @@ static int cb_dds_init(struct flb_input_instance *ins,
 		return -1;
 	}
 
+    DDS_StringSeq_initialize(&ctx->cft_parameters);
+    DDS_StringSeq_set_maximum(&ctx->cft_parameters, 1);
+	DDS_StringSeq_from_array(&ctx->cft_parameters, param_list, 1);
+
+    ctx->cft = DDS_DomainParticipant_create_contentfilteredtopic_with_filter(
+                ctx->participant,
+                "ContentFilteredTopic",
+                ctx->topic,
+                "tag MATCH %0",
+                &ctx->cft_parameters, 
+				DDS_STRINGMATCHFILTER_NAME);
+        if (ctx->cft == NULL) {
+            flb_error("create_contentfilteredtopic error\n");
+            dds_shutdown(ctx->participant);
+            return -1;
+        }
+
 	/* To customize data reader QoS, use
 	   the configuration file USER_QOS_PROFILES.xml */
 	ctx->reader = DDS_Subscriber_create_datareader(
-			ctx->subscriber, DDS_Topic_as_topicdescription(ctx->topic),
+			ctx->subscriber, DDS_ContentFilteredTopic_as_topicdescription(ctx->cft),
 			&DDS_DATAREADER_QOS_DEFAULT, NULL, DDS_STATUS_MASK_NONE);
 	if (ctx->reader == NULL) {
 		flb_error("[in_dds] create_datareader error");
@@ -250,7 +277,6 @@ static int cb_dds_exit(void *data, struct flb_config *config)
 
 		if (ctx->participant) {
 				dds_shutdown(ctx->participant);
-
 		}
 
 		flb_free(ctx);
