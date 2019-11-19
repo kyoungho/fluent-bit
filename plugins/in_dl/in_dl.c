@@ -40,12 +40,10 @@ static int cb_dl_collect(struct flb_input_instance *ins,
     struct RTI_DL_LogMessageSeq data_seq = DDS_SEQUENCE_INITIALIZER;
     struct DDS_SampleInfoSeq info_seq = DDS_SEQUENCE_INITIALIZER;
     DDS_ReturnCode_t retcode;
-    int i, j;
+    int i;
     msgpack_packer mp_pck;
     msgpack_sbuffer mp_sbuf;
     RTI_DL_LogMessage *dl_data;
-    //int record_len;
-    //Record *record;
 
     dl_reader = RTI_DL_LogMessageDataReader_narrow(ctx->reader);
     if (dl_reader == NULL) {
@@ -133,7 +131,7 @@ static int cb_dl_init(struct flb_input_instance *ins,
 	ctx->i_ins = ins;
 
 	// Setting Domain ID
-	tmp = flb_input_get_property("domain_id", ins);
+	tmp = flb_input_get_property("Domain_ID", ins);
 	if (tmp != NULL && atoi(tmp) >= 0) {
 		ctx->domain_id = atoi(tmp);
 	}
@@ -142,14 +140,14 @@ static int cb_dl_init(struct flb_input_instance *ins,
 	}
 
 	// Setting interval
-	tmp = flb_input_get_property("interval_sec", ins);
+	tmp = flb_input_get_property("Interval_Sec", ins);
 	if (tmp != NULL && atoi(tmp) >= 0) {
         ctx->interval_sec = atoi(tmp);
     }
     else {
         ctx->interval_sec = DEFAULT_INTERVAL_SEC;
     }
-	tmp = flb_input_get_property("interval_nsec", ins);
+	tmp = flb_input_get_property("Interval_Nsec", ins);
 	if (tmp != NULL && atoi(tmp) >= 0) {
         ctx->interval_nsec = atoi(tmp);
     }
