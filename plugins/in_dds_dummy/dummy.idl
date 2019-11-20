@@ -1,0 +1,4 @@
+struct Dummy {
+    double ts;
+    string message;
+};
