@@ -200,7 +200,7 @@ static int cb_dds_dummy_exit(void *data, struct flb_config *config) {
 }
 
 struct flb_output_plugin out_dds_dummy_plugin = {
-	.name         = "dds_dummy",
+	.name         = "d_dummy",
 	.description  = "DDS Dummy Output Plugin",
 	.cb_init      = cb_dds_dummy_init,
 	.cb_flush     = cb_dds_dummy_flush,

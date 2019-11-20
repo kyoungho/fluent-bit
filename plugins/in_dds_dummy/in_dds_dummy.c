@@ -231,7 +231,7 @@ static int cb_dds_dummy_exit(void *data, struct flb_config *config)
 }
 
 struct flb_input_plugin in_dds_dummy_plugin = {
-		.name         = "dds_dummy",
+		.name         = "d_dummy",
 		.description  = "DDS Dummy Input Plugin",
 		.cb_init      = cb_dds_dummy_init,
 		.cb_pre_run   = NULL,
