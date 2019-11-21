@@ -69,7 +69,6 @@ static int cb_dds_dummy_collect(struct flb_input_instance *ins,
 
             data = DummySeq_get_reference(&data_seq, i);
 			msgpack_pack_array(&mp_pck, 2);
-			// TODO: Source Timestamp
             msgpack_pack_double(&mp_pck, data->ts);
 
             msgpack_pack_map(&mp_pck, 1);

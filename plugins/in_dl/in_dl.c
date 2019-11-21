@@ -44,6 +44,7 @@ static int cb_dl_collect(struct flb_input_instance *ins,
     msgpack_packer mp_pck;
     msgpack_sbuffer mp_sbuf;
     RTI_DL_LogMessage *dl_data;
+	struct flb_time ts;
 
     dl_reader = RTI_DL_LogMessageDataReader_narrow(ctx->reader);
     if (dl_reader == NULL) {
@@ -69,8 +70,11 @@ static int cb_dl_collect(struct flb_input_instance *ins,
 
             dl_data = RTI_DL_LogMessageSeq_get_reference(&data_seq, i);
 			msgpack_pack_array(&mp_pck, 2);
-			// TODO: Source Timestamp
-            msgpack_pack_double(&mp_pck, 0);
+
+			ts.tm.tv_sec = DDS_SampleInfoSeq_get_reference(&info_seq, i)->source_timestamp.sec;
+			ts.tm.tv_nsec = DDS_SampleInfoSeq_get_reference(&info_seq, i)->source_timestamp.nanosec;
+
+            msgpack_pack_double(&mp_pck, flb_time_to_double(&ts));
             msgpack_pack_map(&mp_pck, 6);
     
 			msgpack_pack_str(&mp_pck, 7);
