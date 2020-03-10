@@ -268,20 +268,20 @@ static int cb_dds_init(struct flb_input_instance *ins,
 
 static int cb_dds_exit(void *data, struct flb_config *config)
 {
-		(void) *config;
-		struct flb_in_dds_config *ctx = data;
+	(void) *config;
+	struct flb_in_dds_config *ctx = data;
 
-		if (!ctx) {
-			return 0;
-		}
-
-		if (ctx->participant) {
-				dds_shutdown(ctx->participant);
-		}
-
-		flb_free(ctx);
-
+	if (!ctx) {
 		return 0;
+	}
+
+	if (ctx->participant) {
+		dds_shutdown(ctx->participant);
+	}
+
+	flb_free(ctx);
+
+	return 0;
 }
 
 struct flb_input_plugin in_dds_plugin = {
