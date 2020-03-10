@@ -66,7 +66,7 @@ static int cb_dds_collect(struct flb_input_instance *ins,
 
     for (i = 0; i < FBSeq_get_length(&data_seq); ++i) {
         if (DDS_SampleInfoSeq_get_reference(&info_seq, i)->valid_data) {
-		    msgpack_sbuffer_init(&mp_sbuf);
+			msgpack_sbuffer_init(&mp_sbuf);
     		msgpack_packer_init(&mp_pck, &mp_sbuf, msgpack_sbuffer_write);
 
             fb_data = FBSeq_get_reference(&data_seq, i);
@@ -272,7 +272,7 @@ static int cb_dds_exit(void *data, struct flb_config *config)
 		struct flb_in_dds_config *ctx = data;
 
 		if (!ctx) {
-				return 0;
+			return 0;
 		}
 
 		if (ctx->participant) {
